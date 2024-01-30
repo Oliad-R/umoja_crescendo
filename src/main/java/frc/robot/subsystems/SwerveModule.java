@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix6.hardware.CANcoder;
+// import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -25,7 +26,7 @@ public class SwerveModule {
 
     private final PIDController turnPidController;
 
-    private final CANCoder absoluteEncoder;
+    private final CANcoder absoluteEncoder;
     private final boolean absoluteEncoderReversed;
     private final double absoluteEncoderOffsetRad;
 
@@ -34,7 +35,7 @@ public class SwerveModule {
         
         this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
         this.absoluteEncoderReversed = isAbsoluteEncoderReversed;
-        absoluteEncoder = new CANCoder(absoluteEncoderId);
+        absoluteEncoder = new CANcoder(absoluteEncoderId, "rio");
 
         driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
         turnMotor = new CANSparkMax(turnMotorId, MotorType.kBrushless);
@@ -79,7 +80,7 @@ public class SwerveModule {
     }
 
     public double getAbsoluteEncoderRad() {
-        double angle = (absoluteEncoder.getAbsolutePosition() * Math.PI / 180);
+        double angle = (absoluteEncoder.getAbsolutePosition().getValueAsDouble() * Math.PI / 180);
         angle -= absoluteEncoderOffsetRad;
         return angle * (absoluteEncoderReversed ? -1.0 : 1.0);
     }
@@ -119,6 +120,6 @@ public class SwerveModule {
     public SwerveModulePosition getPosition(){
         return new SwerveModulePosition(
             driveEncoder.getPosition(),
-            Rotation2d.fromDegrees(absoluteEncoder.getPosition() - absoluteEncoderOffsetRad));
+            Rotation2d.fromDegrees(absoluteEncoder.getPosition().getValueAsDouble() - absoluteEncoderOffsetRad));
       }
 }
