@@ -1,50 +1,64 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.CANSparkLowLevel;
 // import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
-import com.revrobotics.SparkMaxRelativeEncoder.Type;
+import com.revrobotics.SparkRelativeEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
 
 public class SwerveModule {
     
-    private final CANSparkMax driveMotor;
-    private final CANSparkMax turnMotor;
+    public final CANSparkMax driveMotor;
+    public final CANSparkMax turnMotor;
 
     private final RelativeEncoder driveEncoder;
     private final RelativeEncoder turnEncoder;
 
     private final PIDController turnPidController;
 
-    private final CANcoder absoluteEncoder;
-    private final boolean absoluteEncoderReversed;
-    private final double absoluteEncoderOffsetRad;
+    public final CANcoder absoluteEncoder;
+
+    public final int absoluteEncoderID;
 
     public SwerveModule(int driveMotorId, int turnMotorId, boolean driveMotorReversed, boolean turnMotorReversed,
             int absoluteEncoderId, double absoluteEncoderOffset, boolean isAbsoluteEncoderReversed){
-        
-        this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
-        this.absoluteEncoderReversed = isAbsoluteEncoderReversed;
+        CANcoderConfiguration config = new CANcoderConfiguration();
+        config.MagnetSensor.MagnetOffset = absoluteEncoderOffset;
+        config.MagnetSensor.SensorDirection = isAbsoluteEncoderReversed ? SensorDirectionValue.Clockwise_Positive : SensorDirectionValue.CounterClockwise_Positive;
+        config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
         absoluteEncoder = new CANcoder(absoluteEncoderId, "rio");
+
+        this.absoluteEncoderID = absoluteEncoderId;
 
         driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
         turnMotor = new CANSparkMax(turnMotorId, MotorType.kBrushless);
 
-        // driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 10);
-        // turnMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 10);
+        driveMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kBrake);
+        turnMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kBrake);
 
-        driveMotor.restoreFactoryDefaults();
-        turnMotor.restoreFactoryDefaults();
+        //driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 10);
+        //turnMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 10);
+        //absoluteEncoder.setPeriodicFramePeriod(CANSparkLowLevel.PeriodicFrame.kStatus2, 10);
+
+        // driveMotor.restoreFactoryDefaults();
+        // turnMotor.restoreFactoryDefaults();
 
         driveMotor.setInverted(driveMotorReversed);
         turnMotor.setInverted(turnMotorReversed);
@@ -59,6 +73,8 @@ public class SwerveModule {
 
         turnPidController = new PIDController(ModuleConstants.kPTurning, 0, 0);
         turnPidController.enableContinuousInput(-Math.PI, Math.PI);
+
+        Timer.delay(2);
 
         resetEncoders();
     }
@@ -80,14 +96,12 @@ public class SwerveModule {
     }
 
     public double getAbsoluteEncoderRad() {
-        double angle = (absoluteEncoder.getAbsolutePosition().getValueAsDouble() * Math.PI / 180);
-        angle -= absoluteEncoderOffsetRad;
-        return angle * (absoluteEncoderReversed ? -1.0 : 1.0);
+        return absoluteEncoder.getAbsolutePosition().getValueAsDouble() * 2.0 * Math.PI;
     }
 
     public void resetEncoders() {
         driveEncoder.setPosition(0);
-        turnEncoder.setPosition(getAbsoluteEncoderRad());
+        resetTurn();
     }
 
     public void resetTurn(){
@@ -106,13 +120,14 @@ public class SwerveModule {
         }
         state = SwerveModuleState.optimize(state, getState().angle);
         driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        turnMotor.set(turnPidController.calculate(getTurningPosition(), state.angle.getRadians()));
+        SmartDashboard.putNumber("ID: " + absoluteEncoderID, Math.toDegrees(getTurningPosition()));
+        SmartDashboard.putNumber("GOAL: " + absoluteEncoderID, Math.toDegrees(state.angle.getRadians()));
+        SmartDashboard.putNumber("Set motor percent: " + absoluteEncoderID, turnPidController.calculate(getAbsoluteEncoderRad(), state.angle.getRadians()));
+        turnMotor.set(turnPidController.calculate(turnEncoder.getPosition(), state.angle.getRadians()));
         //turnMotor.set(turnPidController.calculate(getTurningPosition(), state.angle.getDegrees()));
     }
 
     public void stop() {
-        driveMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kBrake);
-        turnMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kBrake);
         driveMotor.set(0);
         turnMotor.set(0);
     }
@@ -120,6 +135,6 @@ public class SwerveModule {
     public SwerveModulePosition getPosition(){
         return new SwerveModulePosition(
             driveEncoder.getPosition(),
-            Rotation2d.fromDegrees(absoluteEncoder.getPosition().getValueAsDouble() - absoluteEncoderOffsetRad));
+            Rotation2d.fromDegrees(getTurningPosition()));
       }
 }

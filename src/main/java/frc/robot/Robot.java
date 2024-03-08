@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -20,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends TimedRobot{
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
 
@@ -30,8 +35,28 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    //TO-DO:
+    //BUTTONS TO ROTATE THE ROBOT 90 deg, 180 deg, 270deg, etc. 
+    //BUTTON TO ROTATE THE ROBOT 360 if we get defended.
+    // RobotContainer.climber.resetEncoders();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+
+    // Logger.recordMetadata("ProjectName", "ACCNSwerveProject"); // Set a metadata value
+
+    // if (isReal()) {
+    //     Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
+    //     Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+    //     new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+    // } else {
+    //     setUseTiming(false); // Run as fast as possible
+    //     String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+    //     Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
+    //     Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+    // }
+
+    // // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in the "Understanding Data Flow" page
+    // Logger.start();
     
     // Logger.start();
     m_robotContainer = new RobotContainer();
@@ -51,6 +76,9 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    SmartDashboard.putBoolean("HAS NOTE", RobotContainer.intake.intakeLimitSwitch.get());
+    SmartDashboard.putBoolean("ARM DOWN", RobotContainer.arm.armLimitSwitch.get());
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -67,6 +95,10 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
+    RobotContainer.swerveSubsystem.zeroHeading();
+    RobotContainer.swerveSubsystem.resetOdometry(new Pose2d(1.37, 5.56, new Rotation2d(0)));
+    RobotContainer.swerveSubsystem.resetDriveEncoders();
+
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -82,17 +114,17 @@ public class Robot extends TimedRobot {
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
-    // this line or comment it out.
+    // this line or comment it out.s
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    RobotContainer.swerveSubsystem.zeroHeading();
-    RobotContainer.swerveSubsystem.resetTurn();
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    
+  }
 
   @Override
   public void testInit() {

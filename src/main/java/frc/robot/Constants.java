@@ -38,7 +38,7 @@ public final class Constants {
         public static final double kTurnEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
         public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
         public static final double kTurnEncoderRPM2RadPerSec = kTurnEncoderRot2Rad / 60;
-        public static final double kPTurning = 0.6;
+        public static final double kPTurning = 0.4;
     }
 
     public static final class DriveConstants {
@@ -53,30 +53,30 @@ public final class Constants {
                 new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
                 new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
 
-        public static final int kFrontLeftDriveMotorPort = 21;
-        public static final int kFrontLeftTurningMotorPort = 20;
+        public static final int kFrontLeftDriveMotorPort = 16;
+        public static final int kFrontLeftTurningMotorPort = 15;
 
-        public static final int kBackLeftDriveMotorPort = 16;
-        public static final int kBackLeftTurningMotorPort = 15;
+        public static final int kBackLeftDriveMotorPort = 10;
+        public static final int kBackLeftTurningMotorPort = 11;
 
-        public static final int kFrontRightDriveMotorPort = 26;
-        public static final int kFrontRightTurningMotorPort = 25;
+        public static final int kFrontRightDriveMotorPort = 20;
+        public static final int kFrontRightTurningMotorPort = 21;
 
-        public static final int kBackRightDriveMotorPort = 11;
-        public static final int kBackRightTurningMotorPort = 10;
+        public static final int kBackRightDriveMotorPort = 26;
+        public static final int kBackRightTurningMotorPort = 25;
 
         public static final boolean kFrontLeftTurningEncoderReversed = false;
         public static final boolean kBackLeftTurningEncoderReversed = false;
         public static final boolean kFrontRightTurningEncoderReversed = false;
         public static final boolean kBackRightTurningEncoderReversed = false;
 
-        public static final boolean kFrontLeftDriveReversed = false;
-        public static final boolean kBackLeftDriveReversed = false;
-        public static final boolean kFrontRightDriveReversed = false;
-        public static final boolean kBackRightDriveReversed = false;
+        public static final boolean kFrontLeftDriveReversed = true;
+        public static final boolean kBackLeftDriveReversed = true;
+        public static final boolean kFrontRightDriveReversed = true;
+        public static final boolean kBackRightDriveReversed = true;
 
-        public static final int kFrontLeftDriveAbsoluteEncoderPort = 22;
-        public static final int kBackLeftDriveAbsoluteEncoderPort = 17;
+        public static final int kFrontLeftDriveAbsoluteEncoderPort = 17;
+        public static final int kBackLeftDriveAbsoluteEncoderPort = 22;
         public static final int kFrontRightDriveAbsoluteEncoderPort = 27;
         public static final int kBackRightDriveAbsoluteEncoderPort = 12;
 
@@ -85,10 +85,10 @@ public final class Constants {
         public static final boolean kFrontRightDriveAbsoluteEncoderReversed = true;
         public static final boolean kBackRightDriveAbsoluteEncoderReversed = true;
 
-        public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -0.003605;//2.845534;
-        public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = -0.005944;//3.684622;
-        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -0.00101;//1.903670;
-        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 0.003179;//0.427981;
+        public static final double kFrontLeftDriveAbsoluteEncoderOffsetRot = -0.421387;
+        public static final double kBackLeftDriveAbsoluteEncoderOffsetRot = -0.341309;
+        public static final double kFrontRightDriveAbsoluteEncoderOffsetRot = 0.049805;
+        public static final double kBackRightDriveAbsoluteEncoderOffsetRot = 0.125977;
 
         public static final double kPhysicalMaxSpeedMetersPerSecond = 4.4;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
@@ -100,6 +100,24 @@ public final class Constants {
 
         public static final double kSlowButtonDriveModifier = 0.25;
         public static final double kSlowButtonTurnModifier = 0.5;
+    }
+
+    public static final class IntakeConstants {
+        public static final int frontWheelID = 42;
+        public static final int leftWheelID = 41;
+        public static final int rightWheelID = 40;
+    }
+
+    public static final class ArmConstants {
+        public static final int leftMotorID = 43;
+        public static final int rightMotorID = 44;
+    }
+
+
+    public static final class ClimbConstants {
+        public static final int leftMotorID = 50;
+        public static final int rightMotorID = 51;
+        public static final double kP =  1 / 1;
     }
 
     public static final class AutoConstants {
@@ -124,8 +142,32 @@ public final class Constants {
         public static final int kDriverXAxis = 0;
         public static final int kDriverRotAxis = 4;
         public static final int kDriverFieldOrientedButtonIdx = 1;
+        public static final int kDriverRB = 6;
 
         public static final double kDeadband = 0.05;
+
+        //BUTTONS
+
+        public static final int A = 1;
+        public static final int B = 2;
+        public static final int X = 3;
+        public static final int Y = 4;
+        public static final int LB = 5;
+        public static final int RB = 6;
+        public static final int BACK = 7;
+        public static final int START = 8;
+        public static final int L3 = 9;
+        public static final int R3 = 10;
+
+        //AXES
+
+        public static final int LX = 0;
+        public static final int LY = 1;
+        public static final int LT = 2;
+
+        public static final int RT = 3;
+        public static final int RX = 4;
+        public static final int RY = 5;
     }
 
 }

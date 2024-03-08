@@ -6,14 +6,15 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Rotation2d;
+// import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.USB;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class SwerveJoystick extends Command {
@@ -22,6 +23,9 @@ public class SwerveJoystick extends Command {
   private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction;
 
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
+
+  Joystick j = new Joystick(USB.DRIVER_CONTROLLER);
+
   /** Creates a new SwerveJoystick. */
   public SwerveJoystick(SwerveSubsystem swerveSubsystem, Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, 
     Supplier<Double> turningSpdFuntion) {
@@ -56,7 +60,7 @@ public class SwerveJoystick extends Command {
     turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
 
     // 3. Make the driving smoother
-    if (RobotContainer.driverController.getRawButton(6)){
+    if (RobotContainer.driverController.getRawButton(OIConstants.kDriverRB)){
       xSpeed = xLimiter.calculate(xSpeed) * (DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * DriveConstants.kSlowButtonDriveModifier);
       ySpeed = yLimiter.calculate(ySpeed) * (DriveConstants.kTeleDriveMaxSpeedMetersPerSecond * DriveConstants.kSlowButtonDriveModifier);
       turningSpeed = turningLimiter.calculate(turningSpeed) * (DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * DriveConstants.kSlowButtonTurnModifier);
@@ -73,8 +77,25 @@ public class SwerveJoystick extends Command {
     // 5. Convert chassis speeds to individual module states
     SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
-    // 6. Output each module states to the wheels
     swerveSubsystem.setModuleStates(moduleStates);
+
+    if(j.getRawButton(OIConstants.START)){
+      swerveSubsystem.resetTurn();
+    }
+    if(j.getRawButton(OIConstants.BACK)){
+      swerveSubsystem.zeroHeading();
+    }
+    
+    // try {
+      //Limit the CAN Output Buffer
+      // Thread.sleep(100);
+      // 6. Output each module states to the wheels
+    //   swerveSubsystem.setModuleStates(moduleStates);
+    // } catch (InterruptedException e) {
+    //   e.printStackTrace();
+    // }
+
+    // System.out.println("X: "+xSpeed+" Y: "+ySpeed+" TRN: "+turningSpeed);
   }
 
   // Called once the command ends or is interrupted.
