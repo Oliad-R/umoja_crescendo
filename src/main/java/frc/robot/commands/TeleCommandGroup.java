@@ -13,8 +13,8 @@ public class TeleCommandGroup extends ParallelCommandGroup{
 
         addCommands(new SwerveJoystick(swerveSubsystem,
         () -> -driverController.getRawAxis(OIConstants.kDriverYAxis),
-        () -> driverController.getRawAxis(OIConstants.kDriverXAxis),
-        () -> driverController.getRawAxis(OIConstants.kDriverRotAxis)));
+        () -> -driverController.getRawAxis(OIConstants.kDriverXAxis),
+        () -> -driverController.getRawAxis(OIConstants.kDriverRotAxis)));
 
         addCommands(new ArmJoystick(arm,intake,climber,operatorController));
     }

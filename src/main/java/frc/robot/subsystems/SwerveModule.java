@@ -74,7 +74,7 @@ public class SwerveModule {
         turnPidController = new PIDController(ModuleConstants.kPTurning, 0, 0);
         turnPidController.enableContinuousInput(-Math.PI, Math.PI);
 
-        Timer.delay(2);
+        // Timer.delay(2);
 
         resetEncoders();
     }
@@ -99,6 +99,10 @@ public class SwerveModule {
         return absoluteEncoder.getAbsolutePosition().getValueAsDouble() * 2.0 * Math.PI;
     }
 
+    public double getAbsoluteEncoderPosition() {
+        return absoluteEncoder.getPosition().getValueAsDouble() * 2.0 * Math.PI;
+    }
+
     public void resetEncoders() {
         driveEncoder.setPosition(0);
         resetTurn();
@@ -120,10 +124,12 @@ public class SwerveModule {
         }
         state = SwerveModuleState.optimize(state, getState().angle);
         driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+
         SmartDashboard.putNumber("ID: " + absoluteEncoderID, Math.toDegrees(getTurningPosition()));
         SmartDashboard.putNumber("GOAL: " + absoluteEncoderID, Math.toDegrees(state.angle.getRadians()));
         SmartDashboard.putNumber("Set motor percent: " + absoluteEncoderID, turnPidController.calculate(getAbsoluteEncoderRad(), state.angle.getRadians()));
-        turnMotor.set(turnPidController.calculate(turnEncoder.getPosition(), state.angle.getRadians()));
+        
+        turnMotor.set(turnPidController.calculate(getTurningPosition(), state.angle.getRadians()));
         //turnMotor.set(turnPidController.calculate(getTurningPosition(), state.angle.getDegrees()));
     }
 
