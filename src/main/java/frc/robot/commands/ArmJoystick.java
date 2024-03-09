@@ -36,13 +36,15 @@ public class ArmJoystick extends Command {
     @Override
     public void execute(){
         boolean isShooting = j.getRawButton(OIConstants.LB);
+
         if(isShooting){
             intakeSubsystem.runShooter(-1);
         } else {
             intakeSubsystem.runShooter(0);
         }
+
         if(j.getRawButton(OIConstants.RB)){
-            if (!isShooting && intakeSubsystem.intakeLimitSwitch.get()) {
+            if (!isShooting && intakeSubsystem.getIntakeLimitSwitch()) {
                 intakeSubsystem.runIntake(0);
             } else {
                 intakeSubsystem.runIntake(1);
@@ -51,6 +53,7 @@ public class ArmJoystick extends Command {
             intakeSubsystem.runIntake(0);
         }
 
+        //Climber Logic
         if(j.getRawButton(OIConstants.A)){
             climberSubsystem.runClimber(-0.3);
         } else if(j.getRawButton(OIConstants.Y)){
@@ -58,47 +61,24 @@ public class ArmJoystick extends Command {
         } else {
             climberSubsystem.runClimber(0);
         }
-        // else if(j.getRawButton(5) && j.getRawButton(6)){
-        //     intakeSubsystem.runShooter(-1);
-        //     intakeSubsystem.runIntake(1);
-        // }
-        // if (j.getRawButton(1)){
-        //     climberSubsystem.CLIMB_STATE=1;
-        // }
-        // else if (j.getRawButton(4)){
-        //     climberSubsystem.CLIMB_STATE=0;
-        // }
-        // else {
-        //     intakeSubsystem.stop();
-        //     climberSubsystem.stop();
-        // }
 
+        //Running the arm
         armInput = j.getRawAxis(OIConstants.LY)*0.4;
+        armSubsystem.runArm(armInput);
 
-        SmartDashboard.putNumber("JVALUE", armInput);
-
-        if(!armSubsystem.armLimitSwitch.get()){
-            armSubsystem.runArm(armInput);
-        } else {
-            armSubsystem.rightEncoder.setPosition(0);
-            armSubsystem.leftEncoder.setPosition(0);
-            if(armInput<0){
-                armSubsystem.runArm(armInput);
-            } else {
-                armSubsystem.runArm(0);
-            }
-        }
-
-        SmartDashboard.putBoolean("LIMITSWITCH ARM", armSubsystem.armLimitSwitch.get());
+        SmartDashboard.putBoolean("LIMITSWITCH ARM", armSubsystem.getArmLimitSwitch());
         
         SmartDashboard.putNumber("CLIMBER ENCODER", climberSubsystem.rightMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("ARM ENCODER", armSubsystem.rightEncoder.getPosition());
 
-        double position = armSubsystem.rightEncoder.getPosition();
+        double armPos = armSubsystem.rightEncoder.getPosition();
 
+        VisionLEDMode currentLedMode = RobotContainer.camera.getLEDMode();
+        VisionLEDMode ledMode = armPos < -141 || ( armPos < -22 && armPos > -25) ? VisionLEDMode.kOn : VisionLEDMode.kOff;
 
-        VisionLEDMode ledMode = position < -141 || ( position < -22 && position > -25) ? VisionLEDMode.kOn : VisionLEDMode.kOff;
-        RobotContainer.camera.setLED(ledMode);
+        if(ledMode!=currentLedMode){ //Should reduce how many times we set the camera LED mode
+            RobotContainer.camera.setLED(ledMode);
+        }
         // armSubsystem.runArm()
     }
 }

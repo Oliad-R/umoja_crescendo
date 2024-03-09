@@ -31,17 +31,30 @@ public class Intake extends SubsystemBase{
         // leftWheel.setSmartCurrentLimit(0);
     }
 
+    /**
+     * @param percent should be positive to intake.
+     */
     public void runIntake(double percent){
         frontWheel.set(percent);
     }
 
+    /**
+     * @param percent should be negative to shoot out.
+     */
     public void runShooter(double percent){
         rightWheel.set(percent);
         leftWheel.set(percent);
     }
 
+    /**
+     * Stops all intake & shooting motors.
+     */
     public void stop(){
         runIntake(0);
         runShooter(0);
+    }
+
+    public boolean getIntakeLimitSwitch(){
+        return intakeLimitSwitch.get();
     }
 }

@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 // import org.littletonrobotics.junction.networktables.NT4Publisher;
 // import org.littletonrobotics.junction.wpilog.WPILOGReader;
 // import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+import frc.robot.commands.TeleCommandGroup;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -115,6 +116,8 @@ public class Robot extends TimedRobot{
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.s
+    RobotContainer.swerveSubsystem.setDefaultCommand(new TeleCommandGroup(RobotContainer.swerveSubsystem,RobotContainer.arm,RobotContainer.intake,RobotContainer.climber,RobotContainer.driverController, RobotContainer.operatorController));
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

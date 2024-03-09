@@ -54,6 +54,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.USB;
 import frc.robot.commands.ArmJoystick;
+import frc.robot.commands.AutoShoot;
 import frc.robot.commands.SwerveJoystick;
 import frc.robot.commands.TeleCommandGroup;
 import frc.robot.subsystems.Arm;
@@ -85,11 +86,12 @@ public class RobotContainer {
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
         
-        swerveSubsystem.setDefaultCommand(new TeleCommandGroup(swerveSubsystem,arm,intake,climber,driverController, operatorController));
+        // swerveSubsystem.setDefaultCommand(new TeleCommandGroup(swerveSubsystem,arm,intake,climber,driverController, operatorController));
 
     // Configure the button bindings
     configureBindings();
   }
+
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -108,7 +110,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // return new AutoCommandGroup(swerveSubsystem, arm, intake, climber);
     // return null;
-    return autoChooser.getSelected();
+    // return autoChooser.getSelected();
+    return new AutoShoot(swerveSubsystem, arm, intake);
         // // 1. Create trajectory settings
         // TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
         //         AutoConstants.kMaxSpeedMetersPerSecond,

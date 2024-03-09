@@ -33,10 +33,30 @@ public class Arm extends SubsystemBase{
         rightMotor.setInverted(true);
     }
 
-    //TO-DO:
-    // put the arm limit switch in here
+    /**
+     * @param percent should be negative/positive to move the arm up/down.
+     */
     public void runArm(double percent){
-        leftMotor.set(percent);
-        rightMotor.set(percent);
+        if(!armLimitSwitch.get()){ //If the arm isn't fully down operate regularly
+            leftMotor.set(percent);
+            rightMotor.set(percent);
+        } else { //If the arm is down:
+            resetEncoders(); //Reset left/right encoders to position 0
+            if(percent<0){ //If they want to move the arm up, allow it.
+                leftMotor.set(percent);
+                rightMotor.set(percent);
+            } else { //Don't let them bring the arm back down
+                runArm(0);
+            }
+        }
+    }
+
+    public void resetEncoders(){
+        rightEncoder.setPosition(0);
+        leftEncoder.setPosition(0);
+    }
+
+    public boolean getArmLimitSwitch(){
+        return armLimitSwitch.get();
     }
 }
