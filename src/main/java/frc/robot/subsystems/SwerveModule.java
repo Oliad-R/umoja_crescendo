@@ -74,7 +74,7 @@ public class SwerveModule {
         turnPidController = new PIDController(ModuleConstants.kPTurning, 0, 0);
         turnPidController.enableContinuousInput(-Math.PI, Math.PI);
 
-        // Timer.delay(2);
+        Timer.delay(2);
 
         resetEncoders();
     }

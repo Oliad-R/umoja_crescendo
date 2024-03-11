@@ -43,9 +43,9 @@ public final class Constants {
 
     public static final class DriveConstants {
 
-        public static final double kTrackWidth = Units.inchesToMeters(18.5);
+        public static final double kTrackWidth = Units.inchesToMeters(35.5);
         // Distance between right and left wheels
-        public static final double kWheelBase = Units.inchesToMeters(30.75);
+        public static final double kWheelBase = Units.inchesToMeters(33.5);
         // Distance between front and back wheels
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
                 new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
@@ -88,7 +88,7 @@ public final class Constants {
         public static final double kFrontLeftDriveAbsoluteEncoderOffsetRot = -0.421387;
         public static final double kBackLeftDriveAbsoluteEncoderOffsetRot = -0.341309;
         public static final double kFrontRightDriveAbsoluteEncoderOffsetRot = 0.049805;
-        public static final double kBackRightDriveAbsoluteEncoderOffsetRot = 0.125977;
+        public static final double kBackRightDriveAbsoluteEncoderOffsetRot = -0.125977;
 
         public static final double kPhysicalMaxSpeedMetersPerSecond = 4.4;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
@@ -98,7 +98,7 @@ public final class Constants {
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
 
-        public static final double kSlowButtonDriveModifier = 0.25;
+        public static final double kSlowButtonDriveModifier = 0.4;
         public static final double kSlowButtonTurnModifier = 0.5;
     }
 
@@ -111,6 +111,8 @@ public final class Constants {
     public static final class ArmConstants {
         public static final int leftMotorID = 43;
         public static final int rightMotorID = 44;
+        public static final double kP =  0.2;
+        public static final double speakerEncoder = -30;
     }
 
 

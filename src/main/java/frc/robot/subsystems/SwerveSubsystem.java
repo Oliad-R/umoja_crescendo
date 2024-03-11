@@ -140,7 +140,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public double getHeading(){
         //Changes the -180->0 to 180->360 (0 to 180 stays the same)
-        double heading = Math.IEEEremainder(gyro.getYaw(), 360);
+        double heading = Math.IEEEremainder(-gyro.getYaw(), 360);
         // double heading = (-gyro.getYaw() + 360)%180;
         if(heading < 0){
             heading = 180 + (180+heading);
@@ -153,12 +153,16 @@ public class SwerveSubsystem extends SubsystemBase {
         return Rotation2d.fromDegrees(getHeading());
     }
 
+    public Rotation2d getRotation2dRaw(){ // Without the 0->360
+        return Rotation2d.fromDegrees(gyro.getYaw());
+    }
+
     public Pose2d getPose() {
         return odometer.getPoseMeters();
     }
 
     public void resetOdometry(Pose2d pose) {
-        odometer.resetPosition(getRotation2d(), new SwerveModulePosition[] {
+        odometer.resetPosition(getRotation2dRaw(), new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
             backLeft.getPosition(),
@@ -176,6 +180,8 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("FR", Math.toDegrees(frontRight.getAbsoluteEncoderRad()));
         SmartDashboard.putNumber("BL", Math.toDegrees(backLeft.getAbsoluteEncoderRad()));
         SmartDashboard.putNumber("BR", Math.toDegrees(backRight.getAbsoluteEncoderRad()));
+
+        SmartDashboard.putNumber("ODOMETRY METERS (X)", odometer.getPoseMeters().getX());
 
         SmartDashboard.putNumber("T FL", Math.toDegrees(frontLeft.getTurningPosition()%360));
         SmartDashboard.putNumber("T FR", Math.toDegrees(frontRight.getTurningPosition()%360));

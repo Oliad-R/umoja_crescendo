@@ -4,10 +4,12 @@ import java.util.function.Supplier;
 
 import org.photonvision.common.hardware.VisionLEDMode;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.USB;
 import frc.robot.subsystems.Arm;
@@ -22,7 +24,8 @@ public class ArmJoystick extends Command {
     Climber climberSubsystem;
 
     Joystick j = new Joystick(USB.OPERATOR_CONTROLLER);
-    double armInput;
+    double armInput, armPos, error;
+    PIDController armPID = new PIDController(ArmConstants.kP, 0, 0);
 
     public ArmJoystick(Arm armSubsystem, Intake intakeSubsystem, Climber climberSubsystem, Joystick j){
         this.armSubsystem = armSubsystem;
@@ -64,17 +67,21 @@ public class ArmJoystick extends Command {
 
         //Running the arm
         armInput = j.getRawAxis(OIConstants.LY)*0.4;
-        armSubsystem.runArm(armInput);
+        if (j.getRawButton(OIConstants.B)) {
+            armPos = armSubsystem.rightEncoder.getPosition();
+            armSubsystem.runArm(armPID.calculate(armPos, ArmConstants.speakerEncoder));
+        } else {
+            armSubsystem.runArm(armInput);
+        }
 
         SmartDashboard.putBoolean("LIMITSWITCH ARM", armSubsystem.getArmLimitSwitch());
-        
         SmartDashboard.putNumber("CLIMBER ENCODER", climberSubsystem.rightMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("ARM ENCODER", armSubsystem.rightEncoder.getPosition());
 
         double armPos = armSubsystem.rightEncoder.getPosition();
 
         VisionLEDMode currentLedMode = RobotContainer.camera.getLEDMode();
-        VisionLEDMode ledMode = armPos < -141 || ( armPos < -22 && armPos > -25) ? VisionLEDMode.kOn : VisionLEDMode.kOff;
+        VisionLEDMode ledMode = armPos < -141 || ( armPos < ArmConstants.speakerEncoder && armPos > -24.5) ? VisionLEDMode.kOn : VisionLEDMode.kOff;
 
         if(ledMode!=currentLedMode){ //Should reduce how many times we set the camera LED mode
             RobotContainer.camera.setLED(ledMode);

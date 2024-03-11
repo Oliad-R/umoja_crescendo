@@ -54,6 +54,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.USB;
 import frc.robot.commands.ArmJoystick;
+import frc.robot.commands.AutoSequentialCommand;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.SwerveJoystick;
 import frc.robot.commands.TeleCommandGroup;
@@ -111,7 +112,8 @@ public class RobotContainer {
     // return new AutoCommandGroup(swerveSubsystem, arm, intake, climber);
     // return null;
     // return autoChooser.getSelected();
-    return new AutoShoot(swerveSubsystem, arm, intake);
+    // return new AutoShoot(arm, intake);
+    return new AutoSequentialCommand(swerveSubsystem, arm, intake);
         // // 1. Create trajectory settings
         // TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
         //         AutoConstants.kMaxSpeedMetersPerSecond,
