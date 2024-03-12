@@ -68,9 +68,6 @@ public class SwerveSubsystem extends SubsystemBase {
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
 
 
-
-    //TO-DO:
-    //Figure out what the Pose2d numbers are
     public final SwerveDriveOdometry odometer = new SwerveDriveOdometry(
         DriveConstants.kDriveKinematics, new Rotation2d(),
         new SwerveModulePosition[] {
@@ -78,7 +75,7 @@ public class SwerveSubsystem extends SubsystemBase {
           frontRight.getPosition(),
           backLeft.getPosition(),
           backRight.getPosition()
-        }, new Pose2d(1.37, 5.56, new Rotation2d()));
+        }, new Pose2d());
 
     public SwerveSubsystem() {
         new Thread(() -> {
@@ -153,16 +150,13 @@ public class SwerveSubsystem extends SubsystemBase {
         return Rotation2d.fromDegrees(getHeading());
     }
 
-    public Rotation2d getRotation2dRaw(){ // Without the 0->360
-        return Rotation2d.fromDegrees(gyro.getYaw());
-    }
-
     public Pose2d getPose() {
         return odometer.getPoseMeters();
     }
 
     public void resetOdometry(Pose2d pose) {
-        odometer.resetPosition(getRotation2dRaw(), new SwerveModulePosition[] {
+        System.out.println("ODOMETRY RESET");
+        odometer.resetPosition(Rotation2d.fromDegrees(gyro.getYaw()), new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
             backLeft.getPosition(),

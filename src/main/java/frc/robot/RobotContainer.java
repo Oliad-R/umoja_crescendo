@@ -111,9 +111,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // return new AutoCommandGroup(swerveSubsystem, arm, intake, climber);
     // return null;
-    // return autoChooser.getSelected();
+    return autoChooser.getSelected();
     // return new AutoShoot(arm, intake);
-    return new AutoSequentialCommand(swerveSubsystem, arm, intake);
+    // return new AutoSequentialCommand(swerveSubsystem, arm, intake);
         // // 1. Create trajectory settings
         // TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
         //         AutoConstants.kMaxSpeedMetersPerSecond,

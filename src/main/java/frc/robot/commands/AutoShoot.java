@@ -16,6 +16,13 @@ public class AutoShoot extends Command{
     Intake intake;
     SwerveJoystick sj;
     int state = 0;
+
+    public final class AutoShootState {
+        public static final int RESET_ARM = 0;
+        public static final int AIM = 1;
+        public static final int SHOOT = 2;
+        
+    }
     Timer timer;
     double startTime, currentTime;
     PIDController armPID = new PIDController(ArmConstants.kP, 0, 0.01);
@@ -39,7 +46,7 @@ public class AutoShoot extends Command{
     public void execute(){
         double armPosition = arm.rightEncoder.getPosition();
         SmartDashboard.putNumber("ARM ENCODER", armPosition);
-        if (state == 0) {
+        if (state == AutoShootState.RESET_ARM) {
             if(!arm.getArmLimitSwitch()){
                 arm.runArm(0.5);
                 intake.stop();
@@ -50,7 +57,7 @@ public class AutoShoot extends Command{
                 state++;
             }
         }
-        else if(state==1){
+        else if(state == AutoShootState.AIM){
             if(Math.abs(armPosition-ArmConstants.speakerEncoder) > 0.1){
                 // arm.runArm(-0.5);
                 arm.runArm(armPID.calculate(armPosition, ArmConstants.speakerEncoder));
@@ -62,7 +69,7 @@ public class AutoShoot extends Command{
                 startTime = timer.getFPGATimestamp();
             }
         }
-        else if(state==2){
+        else if(state == AutoShootState.SHOOT){
             currentTime = timer.getFPGATimestamp();
             if (currentTime-startTime < 3){
                 arm.runArm(armPID.calculate(armPosition, ArmConstants.speakerEncoder));
@@ -73,7 +80,7 @@ public class AutoShoot extends Command{
                 intake.stop();
                 state++;
             }
-        } else if (state==3){
+        } else if (state == 3){
             if(!arm.getArmLimitSwitch()){
                 arm.runArm(0.2*armPID.calculate(armPosition, 0));
             } else {
