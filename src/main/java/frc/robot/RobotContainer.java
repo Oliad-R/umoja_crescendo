@@ -9,6 +9,7 @@ import java.util.List;
 import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -56,6 +57,7 @@ import frc.robot.Constants.USB;
 import frc.robot.commands.ArmJoystick;
 import frc.robot.commands.AutoSequentialCommand;
 import frc.robot.commands.AutoShoot;
+import frc.robot.commands.ReverseIntake;
 import frc.robot.commands.SwerveJoystick;
 import frc.robot.commands.TeleCommandGroup;
 import frc.robot.subsystems.Arm;
@@ -83,10 +85,36 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+        NamedCommands.registerCommand("AutoAdjust", 
+          new SwerveJoystick(RobotContainer.swerveSubsystem, 
+            () -> {return 0.0;},
+            () -> {return 0.0;},
+            () -> {return 0.0;},
+            true)
+            .withTimeout(2)
+            .andThen(() -> System.out.println("DONE")));
+
+        NamedCommands.registerCommand("initShoot",
+          new AutoShoot(RobotContainer.arm, RobotContainer.intake).withTimeout(4)
+        );
+
+        NamedCommands.registerCommand("autoShoot",
+          new AutoShoot(RobotContainer.arm, RobotContainer.intake, 1).withTimeout(1)
+        );
+
+        NamedCommands.registerCommand("lowerArm",
+          new AutoShoot(RobotContainer.arm, RobotContainer.intake, 3).withTimeout(3)
+        );
+
+        NamedCommands.registerCommand("reverseIntake",
+          new ReverseIntake(RobotContainer.intake).withTimeout(0.1)
+        );
+
         autoChooser = AutoBuilder.buildAutoChooser();
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
-        
+
         // swerveSubsystem.setDefaultCommand(new TeleCommandGroup(swerveSubsystem,arm,intake,climber,driverController, operatorController));
 
     // Configure the button bindings
@@ -111,7 +139,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // return new AutoCommandGroup(swerveSubsystem, arm, intake, climber);
     // return null;
+    
     return autoChooser.getSelected();
+    // return new SwerveJoystick(swerveSubsystem, () -> {return 0.0;},() -> {return 0.0;},() -> {return 0.0;},true);
     // return new AutoShoot(arm, intake);
     // return new AutoSequentialCommand(swerveSubsystem, arm, intake);
         // // 1. Create trajectory settings

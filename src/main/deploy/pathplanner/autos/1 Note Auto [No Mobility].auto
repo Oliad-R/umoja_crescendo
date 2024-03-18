@@ -16,18 +16,6 @@
           "data": {
             "name": "initShoot"
           }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 8.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Path_5"
-          }
         }
       ]
     }

@@ -41,6 +41,7 @@ public class Arm extends SubsystemBase{
             leftMotor.set(percent);
             rightMotor.set(percent);
         } else { //If the arm is down:
+            resetEncoders();
             if(percent<0){ //If they want to move the arm up, allow it.
                 leftMotor.set(percent);
                 rightMotor.set(percent);

@@ -43,6 +43,8 @@ public final class Constants {
 
     public static final class DriveConstants {
 
+        public static final double ArmEncoder2Meters = -20.5; // (51-35)/(3.536066-4.481552); // change in odometer x / change in arm encoder 
+
         public static final double kTrackWidth = Units.inchesToMeters(35.5);
         // Distance between right and left wheels
         public static final double kWheelBase = Units.inchesToMeters(33.5);
@@ -111,7 +113,8 @@ public final class Constants {
     public static final class ArmConstants {
         public static final int leftMotorID = 43;
         public static final int rightMotorID = 44;
-        public static final double kP =  0.2;
+        public static final double kP =  0.1;
+        public static final double kD =  0.01;
         public static final double speakerEncoder = -30;
     }
 

@@ -1,0 +1,62 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7097813862849025,
+      "y": 4.411984597679678
+    },
+    "rotation": -59.489762593884386
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "initShoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "lowerArm"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SOURCE2SOURCE"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "reverseIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SOURCE2SOURCE REVERSED"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "autoShoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

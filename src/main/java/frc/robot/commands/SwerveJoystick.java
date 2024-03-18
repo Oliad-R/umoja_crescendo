@@ -5,11 +5,17 @@
 package frc.robot.commands;
 
 import java.util.function.Supplier;
+
+import org.photonvision.common.hardware.VisionLEDMode;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 // import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
@@ -24,16 +30,21 @@ public class SwerveJoystick extends Command {
 
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
 
+  private boolean inAuto;
+
+  private final PIDController turnPID = new PIDController(0.05, 0, 0);
+
   Joystick j = new Joystick(USB.DRIVER_CONTROLLER);
 
   /** Creates a new SwerveJoystick. */
   public SwerveJoystick(SwerveSubsystem swerveSubsystem, Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, 
-    Supplier<Double> turningSpdFuntion) {
+    Supplier<Double> turningSpdFuntion, boolean inAuto) {
 
       this.swerveSubsystem = swerveSubsystem;
       this.xSpdFunction = xSpdFunction;
       this.ySpdFunction = ySpdFunction;
       this.turningSpdFunction = turningSpdFuntion;
+      this.inAuto = inAuto;
   
       this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
       this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
@@ -68,6 +79,22 @@ public class SwerveJoystick extends Command {
       xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
       ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
       turningSpeed = turningLimiter.calculate(turningSpeed) * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+    }
+
+    if(j.getRawButton(OIConstants.B) || inAuto){
+      var result = RobotContainer.camera.getLatestResult();
+      RobotContainer.camera.setLED(VisionLEDMode.kOn);
+      SmartDashboard.putNumber("TURNING SPEED", turningSpeed);
+
+      if(result.hasTargets()){
+        for (PhotonTrackedTarget target:result.targets){
+          System.out.println(target.getFiducialId());
+          if(target.getFiducialId()==4){
+            turningSpeed = turnPID.calculate(target.getYaw(), 0);
+            break;
+          }
+        }
+      }
     }
 
     // 4. Construct desired chassis speeds

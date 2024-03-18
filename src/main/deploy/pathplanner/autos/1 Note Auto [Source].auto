@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.37,
-      "y": 5.56
+      "x": 0.67,
+      "y": 4.38
     },
-    "rotation": 0
+    "rotation": -58.06
   },
   "command": {
     "type": "sequential",
@@ -18,15 +18,9 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 8.0
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Path_5"
+            "pathName": "SOURCE EXIT"
           }
         }
       ]

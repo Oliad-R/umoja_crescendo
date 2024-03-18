@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.37,
-      "y": 5.56
+      "x": 0.69,
+      "y": 6.68
     },
-    "rotation": 0
+    "rotation": 62.86
   },
   "command": {
     "type": "sequential",
@@ -20,13 +20,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 8.0
+            "waitTime": 5.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Path_5"
+            "pathName": "AMP EXIT"
           }
         }
       ]

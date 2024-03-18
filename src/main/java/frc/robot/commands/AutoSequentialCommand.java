@@ -29,7 +29,7 @@ public class AutoSequentialCommand extends SequentialCommandGroup{
                     // }
                 },
                 () -> {return 0.0;},
-                () -> {return 0.0;}).withTimeout(4)
+                () -> {return 0.0;}, true).withTimeout(4)
             
             // new SwerveJoystick(swerveSubsystem,
             //     () -> {

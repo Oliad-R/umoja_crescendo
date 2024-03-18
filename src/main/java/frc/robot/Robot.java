@@ -4,14 +4,21 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AutoShoot;
+import frc.robot.commands.SwerveJoystick;
 // import org.littletonrobotics.junction.LogFileUtil;
 // import org.littletonrobotics.junction.LoggedRobot;
 // import org.littletonrobotics.junction.Logger;
@@ -29,6 +36,8 @@ import frc.robot.commands.TeleCommandGroup;
 public class Robot extends TimedRobot{
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+
+  public static double initialOdometerPose;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -62,7 +71,6 @@ public class Robot extends TimedRobot{
     // Logger.start();
     m_robotContainer = new RobotContainer();
   }
-
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.
@@ -96,13 +104,17 @@ public class Robot extends TimedRobot{
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    // RobotContainer.swerveSubsystem.zeroHeading();
-    // RobotContainer.swerveSubsystem.resetOdometry(new Pose2d(1.37, 5.54, new Rotation2d(0)));
-    // RobotContainer.swerveSubsystem.resetOdometry(new Pose2d(2, 6, new Rotation2d(0)));
-    // RobotContainer.swerveSubsystem.resetDriveEncoders();
-    // RobotContainer.swerveSubsystem.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
-
-
+    if(DriverStation.getAlliance().isPresent()){
+      Alliance alliance = DriverStation.getAlliance().get();
+      switch (alliance) {
+        case Blue:
+          initialOdometerPose = 1.37;
+          break;
+      
+        case Red:
+          initialOdometerPose = 15.2;
+      }
+    }
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -120,6 +132,10 @@ public class Robot extends TimedRobot{
     // continue until interrupted by another command, remove
     // this line or comment it out.s
     RobotContainer.swerveSubsystem.setDefaultCommand(new TeleCommandGroup(RobotContainer.swerveSubsystem,RobotContainer.arm,RobotContainer.intake,RobotContainer.climber,RobotContainer.driverController, RobotContainer.operatorController));
+    // RobotContainer.swerveSubsystem.setDefaultCommand(new SwerveJoystick(RobotContainer.swerveSubsystem,
+    //     () -> Math.pow(-RobotContainer.driverController.getRawAxis(OIConstants.kDriverYAxis), 3),
+    //     () -> Math.pow(-RobotContainer.driverController.getRawAxis(OIConstants.kDriverXAxis), 3),
+    //     () -> -RobotContainer.driverController.getRawAxis(OIConstants.kDriverRotAxis), false));
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
