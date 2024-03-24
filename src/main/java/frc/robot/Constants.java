@@ -45,10 +45,13 @@ public final class Constants {
 
         public static final double ArmEncoder2Meters = -20.5; // (51-35)/(3.536066-4.481552); // change in odometer x / change in arm encoder 
 
-        public static final double kTrackWidth = Units.inchesToMeters(35.5);
+        public static final double kTrackWidth = Units.inchesToMeters(23.5);
         // Distance between right and left wheels
-        public static final double kWheelBase = Units.inchesToMeters(33.5);
+        public static final double kWheelBase = Units.inchesToMeters(22);
         // Distance between front and back wheels
+
+        public static final double kRobotRadius = Math.sqrt(Math.pow(kTrackWidth, 2) + Math.pow(kWheelBase, 2)) / 2;
+
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
                 new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
                 new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -175,4 +178,10 @@ public final class Constants {
         public static final int RY = 5;
     }
 
+    public final class AutoShootState {
+        public static final int RESET_ARM = 0;
+        public static final int AIM = 1;
+        public static final int SHOOT = 2;
+        public static final int LOWER_AND_INTAKE = 3;
+    }
 }

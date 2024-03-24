@@ -50,11 +50,7 @@ public class ArmJoystick extends Command {
         }
 
         if(j.getRawButton(OIConstants.RB)){
-            if (!isShooting && intakeSubsystem.getIntakeLimitSwitch()) {
-                intakeSubsystem.runIntake(0);
-            } else {
-                intakeSubsystem.runIntake(1);
-            }
+            intakeSubsystem.runIntake(1);
         } else {
             intakeSubsystem.runIntake(0);
         }

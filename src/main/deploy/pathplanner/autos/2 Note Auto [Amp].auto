@@ -18,12 +18,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "lowerArm"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -43,12 +37,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "reverseIntake"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "AMP2AMP REVERSE"
@@ -57,7 +45,32 @@
         {
           "type": "named",
           "data": {
+            "name": "reverseIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "autoShoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "lowerArm"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AMP EXIT"
+                }
+              }
+            ]
           }
         }
       ]

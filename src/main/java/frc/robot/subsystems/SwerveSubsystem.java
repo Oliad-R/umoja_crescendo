@@ -99,7 +99,7 @@ public class SwerveSubsystem extends SubsystemBase {
                         new PIDConstants(1, 0.0, 0.0), // Translation PID constants
                         new PIDConstants(Constants.ModuleConstants.kPTurning, 0.0, 0.0), // Rotation PID constants
                         Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond, // Max module speed, in m/s
-                        Constants.DriveConstants.kTrackWidth, // Drive base radius in meters. Distance from robot center to furthest module.
+                        Constants.DriveConstants.kRobotRadius, // Drive base radius in meters. Distance from robot center to furthest module.
                         new ReplanningConfig() // Default path replanning config. See the API for the options here
                 ),
                 () -> {

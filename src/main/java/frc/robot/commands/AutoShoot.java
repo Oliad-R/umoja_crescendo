@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.AutoShootState;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
@@ -20,13 +21,8 @@ public class AutoShoot extends Command{
     Intake intake;
     SwerveJoystick sj;
     int state = 0;
+    int endState = 4;
 
-    public final class AutoShootState {
-        public static final int RESET_ARM = 0;
-        public static final int AIM = 1;
-        public static final int SHOOT = 2;
-        public static final int LOWER_AND_INTAKE = 3;
-    }
     Timer timer;
     double startTime, currentTime, diff, odometerX, armPos;
     PIDController armPID = new PIDController(ArmConstants.kP, 0, 0.01);
@@ -35,6 +31,15 @@ public class AutoShoot extends Command{
         this.arm = arm;
         this.intake = intake;
         this.state = state;
+
+        addRequirements(arm, intake);
+    }
+
+    public AutoShoot(Arm arm, Intake intake, int state, int endState){
+        this.arm = arm;
+        this.intake = intake;
+        this.state = state;
+        this.endState = endState;
 
         addRequirements(arm, intake);
     }
@@ -100,7 +105,7 @@ public class AutoShoot extends Command{
             intake.runIntake(0.3);
             intake.runShooter(0);
             if(!arm.getArmLimitSwitch()){
-                arm.runArm(0.2*armPID.calculate(armPosition, 0));
+                arm.runArm(0.3*armPID.calculate(armPosition, 0));
             } else {
                 arm.runArm(0);
                 state++;
@@ -109,14 +114,15 @@ public class AutoShoot extends Command{
         }
     }
 
+    @Override
     public boolean isFinished(){
-        return state==4;
+        return state==endState;
     }
 
     @Override
     public void end(boolean isInterrupted){
         arm.runArm(0);
-        intake.stop();
+        intake.runIntake(0.3);
     }
 
 }

@@ -53,6 +53,12 @@
           "data": {
             "name": "autoShoot"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SOURCE EXIT"
+          }
         }
       ]
     }

@@ -99,12 +99,16 @@ public class RobotContainer {
           new AutoShoot(RobotContainer.arm, RobotContainer.intake).withTimeout(4)
         );
 
+        NamedCommands.registerCommand("autoAim",
+          new AutoShoot(RobotContainer.arm, RobotContainer.intake, Constants.AutoShootState.AIM, Constants.AutoShootState.SHOOT).withTimeout(1.5)
+        );
+
         NamedCommands.registerCommand("autoShoot",
-          new AutoShoot(RobotContainer.arm, RobotContainer.intake, 1).withTimeout(1)
+          new AutoShoot(RobotContainer.arm, RobotContainer.intake, Constants.AutoShootState.AIM).withTimeout(2)
         );
 
         NamedCommands.registerCommand("lowerArm",
-          new AutoShoot(RobotContainer.arm, RobotContainer.intake, 3).withTimeout(3)
+          new AutoShoot(RobotContainer.arm, RobotContainer.intake, 3).withTimeout(1.5)
         );
 
         NamedCommands.registerCommand("reverseIntake",
