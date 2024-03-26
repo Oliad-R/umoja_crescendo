@@ -14,7 +14,25 @@
         {
           "type": "named",
           "data": {
-            "name": "initShoot"
+            "name": "ResetArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Aim"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LowerArm"
           }
         },
         {
@@ -24,7 +42,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "lowerArm"
+                  "name": "LowerArm"
                 }
               },
               {
@@ -39,7 +57,26 @@
         {
           "type": "named",
           "data": {
-            "name": "reverseIntake"
+            "name": "ReverseIntake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SOURCE2SOURCE REVERSED"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Aim"
+                }
+              }
+            ]
           }
         },
         {
@@ -51,7 +88,7 @@
         {
           "type": "named",
           "data": {
-            "name": "autoShoot"
+            "name": "Aim"
           }
         },
         {

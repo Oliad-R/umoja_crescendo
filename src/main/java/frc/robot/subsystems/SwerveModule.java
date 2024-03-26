@@ -25,7 +25,7 @@ import frc.robot.Constants.ModuleConstants;
 public class SwerveModule {
     public final CANSparkMax driveMotor, turnMotor;
     private final RelativeEncoder driveEncoder, turnEncoder;
-    private final PIDController turnPidController;
+    private final PIDController turnPIDController;
     public final CANcoder absoluteEncoder;
     public final int absoluteEncoderID;
 
@@ -51,13 +51,18 @@ public class SwerveModule {
         driveEncoder = driveMotor.getEncoder(Type.kHallSensor, 42);
         turnEncoder = turnMotor.getEncoder(Type.kHallSensor, 42);
 
+        driveMotor.setSmartCurrentLimit(30);
+        turnMotor.setSmartCurrentLimit(20);
+
         driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveEncoderRot2Meter);
         driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncoderRPM2MeterPerSec);
         turnEncoder.setPositionConversionFactor(ModuleConstants.kTurnEncoderRot2Rad);
         turnEncoder.setVelocityConversionFactor(ModuleConstants.kTurnEncoderRPM2RadPerSec);
 
-        turnPidController = new PIDController(ModuleConstants.kPTurning, 0, 0);
-        turnPidController.enableContinuousInput(-Math.PI, Math.PI);
+        turnPIDController = new PIDController(ModuleConstants.kPTurning, 0, 0);
+        turnPIDController.enableContinuousInput(-Math.PI, Math.PI);
+
+        // drivePIDcontroller = new PIDController(ModuleConstants.kPDriving, 0, 0);
 
         // Timer.delay(2);
         resetEncoders();
@@ -108,12 +113,14 @@ public class SwerveModule {
         }
         state = SwerveModuleState.optimize(state, getState().angle);
         driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        // driveMotor.set(drivePIDcontroller.calculate())
+        // TODO: CHANGE THIS TO PID
 
         // SmartDashboard.putNumber("ID: " + absoluteEncoderID, Math.toDegrees(getTurningPosition()));
         // SmartDashboard.putNumber("GOAL: " + absoluteEncoderID, Math.toDegrees(state.angle.getRadians()));
         // SmartDashboard.putNumber("Set motor percent: " + absoluteEncoderID, turnPidController.calculate(getAbsoluteEncoderRad(), state.angle.getRadians()));
         
-        turnMotor.set(turnPidController.calculate(getTurningPosition(), state.angle.getRadians()));
+        turnMotor.set(turnPIDController.calculate(getTurningPosition(), state.angle.getRadians()));
         //turnMotor.set(turnPidController.calculate(getTurningPosition(), state.angle.getDegrees()));
     }
 

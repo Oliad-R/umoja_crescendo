@@ -14,7 +14,25 @@
         {
           "type": "named",
           "data": {
-            "name": "initShoot"
+            "name": "ResetArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Aim"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LowerArm"
           }
         },
         {

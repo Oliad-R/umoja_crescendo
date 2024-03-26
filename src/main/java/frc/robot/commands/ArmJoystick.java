@@ -56,9 +56,9 @@ public class ArmJoystick extends Command {
         }
 
         //Climber Logic
-        if(j.getRawButton(OIConstants.A)){
+        if(j.getRawAxis(OIConstants.RT) > 0.5){
             climberSubsystem.runClimber(-0.3);
-        } else if(j.getRawButton(OIConstants.Y)){
+        } else if(j.getRawAxis(OIConstants.LT) > 0.5) {
             climberSubsystem.runClimber(0.3);
         } else {
             climberSubsystem.runClimber(0);
@@ -72,6 +72,12 @@ public class ArmJoystick extends Command {
             odometerX = RobotContainer.swerveSubsystem.odometer.getPoseMeters().getX();
             diff = useFlatAngle ? 0 : Math.abs(Robot.initialOdometerPose-odometerX);
             armSubsystem.runArm(armPID.calculate(armPos, ArmConstants.speakerEncoder + DriveConstants.ArmEncoder2Meters*diff));
+        } else if (j.getRawButton(OIConstants.Y)) {
+            armPos = armSubsystem.rightEncoder.getPosition();
+            armSubsystem.runArm(armPID.calculate(armPos, ArmConstants.farSpeakerEncoder));
+        } else if (j.getRawButton(OIConstants.A)) {
+            armPos = armSubsystem.rightEncoder.getPosition();
+            armSubsystem.runArm(armPID.calculate(armPos, ArmConstants.ampEncoder));
         } else {
             armSubsystem.runArm(armInput);
         }

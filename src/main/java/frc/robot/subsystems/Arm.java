@@ -20,7 +20,7 @@ public class Arm extends SubsystemBase{
 
     public static final DigitalInput armLimitSwitch = new DigitalInput(2);
 
-    public static final PIDController armPID = new PIDController(0,0,0);
+    public static final PIDController armPID = new PIDController(ArmConstants.kP,0,0);
 
     public Arm(){
         leftMotor.setIdleMode(IdleMode.kBrake);

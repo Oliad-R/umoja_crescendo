@@ -55,15 +55,19 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.USB;
 import frc.robot.commands.ArmJoystick;
-import frc.robot.commands.AutoSequentialCommand;
 import frc.robot.commands.AutoShoot;
-import frc.robot.commands.ReverseIntake;
 import frc.robot.commands.SwerveJoystick;
 import frc.robot.commands.TeleCommandGroup;
+import frc.robot.commands.autonomous.AutoAim;
+import frc.robot.commands.autonomous.LowerArm;
+import frc.robot.commands.autonomous.ResetArm;
+import frc.robot.commands.autonomous.ReverseIntake;
+import frc.robot.commands.autonomous.Shoot;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SwerveSubsystem;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -85,34 +89,43 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
-        NamedCommands.registerCommand("AutoAdjust", 
-          new SwerveJoystick(RobotContainer.swerveSubsystem, 
-            () -> {return 0.0;},
-            () -> {return 0.0;},
-            () -> {return 0.0;},
-            true)
-            .withTimeout(2)
-            .andThen(() -> System.out.println("DONE")));
-
+    
         NamedCommands.registerCommand("initShoot",
-          new AutoShoot(RobotContainer.arm, RobotContainer.intake).withTimeout(4)
+          new AutoShoot(arm, intake).withTimeout(4)
         );
 
         NamedCommands.registerCommand("autoAim",
-          new AutoShoot(RobotContainer.arm, RobotContainer.intake, Constants.AutoShootState.AIM, Constants.AutoShootState.SHOOT).withTimeout(1.5)
+          new AutoShoot(arm, intake, Constants.AutoShootState.AIM, Constants.AutoShootState.SHOOT).withTimeout(1.5)
         );
 
         NamedCommands.registerCommand("autoShoot",
-          new AutoShoot(RobotContainer.arm, RobotContainer.intake, Constants.AutoShootState.AIM).withTimeout(2)
+          new AutoShoot(arm, intake, Constants.AutoShootState.AIM).withTimeout(2)
         );
 
         NamedCommands.registerCommand("lowerArm",
-          new AutoShoot(RobotContainer.arm, RobotContainer.intake, 3).withTimeout(1.5)
+          new AutoShoot(arm, intake, 3).withTimeout(1.5)
         );
 
-        NamedCommands.registerCommand("reverseIntake",
-          new ReverseIntake(RobotContainer.intake).withTimeout(0.1)
+        //NEW COMMANDS BROKEN UP
+
+        NamedCommands.registerCommand("Aim", 
+          new AutoAim(arm, intake)
+        );
+
+        NamedCommands.registerCommand("Shoot", 
+          new Shoot(arm, intake).withTimeout(1)
+        );
+
+        NamedCommands.registerCommand("LowerArm", 
+          new LowerArm(arm, intake)
+        );
+
+        NamedCommands.registerCommand("ResetArm", 
+          new ResetArm(arm, intake)
+        );
+
+        NamedCommands.registerCommand("ReverseIntake",
+          new ReverseIntake(intake).withTimeout(0.1)
         );
 
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -141,50 +154,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // return new AutoCommandGroup(swerveSubsystem, arm, intake, climber);
-    // return null;
-    
-    return autoChooser.getSelected();
-    // return new SwerveJoystick(swerveSubsystem, () -> {return 0.0;},() -> {return 0.0;},() -> {return 0.0;},true);
-    // return new AutoShoot(arm, intake);
-    // return new AutoSequentialCommand(swerveSubsystem, arm, intake);
-        // // 1. Create trajectory settings
-        // TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-        //         AutoConstants.kMaxSpeedMetersPerSecond,
-        //         AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-        //                 .setKinematics(DriveConstants.kDriveKinematics);
-
-        // // 2. Generate trajectory
-        // Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-        //         new Pose2d(0, 0, new Rotation2d(0)),
-        //         List.of(
-        //                 new Translation2d(0.075, 0),
-        //                 new Translation2d(-0.075, 0)),
-        //         new Pose2d(-0.25, 0.01, Rotation2d.fromDegrees(0)),
-        //         trajectoryConfig);
-
-        // // 3. Define PID controllers for tracking trajectory
-        // PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
-        // PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
-        // ProfiledPIDController thetaController = new ProfiledPIDController(
-        //         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-        // thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-        // // 4. Construct command to follow trajectory
-        // SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        //         trajectory,
-        //         swerveSubsystem::getPose,
-        //         DriveConstants.kDriveKinematics,
-        //         xController,
-        //         yController,
-        //         thetaController,
-        //         swerveSubsystem::setModuleStates,
-        //         swerveSubsystem);
-
-        //5. Add some init and wrap-up, and return everything
-        // return new SequentialCommandGroup(
-        //         new InstantCommand(() -> swerveSubsystem.resetOdometry(trajectory.getInitialPose())),
-        //         swerveControllerCommand,
-        //         new InstantCommand(() -> swerveSubsystem.stopModules()));
+      return autoChooser.getSelected();
+      // return null;
     }
 }

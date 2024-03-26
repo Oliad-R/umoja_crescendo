@@ -98,7 +98,7 @@ public final class Constants {
         public static final double kPhysicalMaxSpeedMetersPerSecond = 4.4;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
-        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 1.5;
+        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
@@ -118,7 +118,9 @@ public final class Constants {
         public static final int rightMotorID = 44;
         public static final double kP =  0.1;
         public static final double kD =  0.01;
-        public static final double speakerEncoder = -30;
+        public static final double speakerEncoder = -35; //-30; TODO: CHANGE TO 30 FOR COMP
+        public static final double farSpeakerEncoder = -50; // TODO: CHANGE FOR COMP
+        public static final double ampEncoder = -140;
     }
 
 
