@@ -14,10 +14,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
@@ -61,6 +58,7 @@ public class SwerveModule {
 
         turnPIDController = new PIDController(ModuleConstants.kPTurning, 0, 0);
         turnPIDController.enableContinuousInput(-Math.PI, Math.PI);
+
 
         // drivePIDcontroller = new PIDController(ModuleConstants.kPDriving, 0, 0);
 
@@ -116,6 +114,9 @@ public class SwerveModule {
         // driveMotor.set(drivePIDcontroller.calculate())
         // TODO: CHANGE THIS TO PID
 
+        SmartDashboard.putNumber("ID (DRIVE) "+absoluteEncoderID + " TEMP: ", driveMotor.getMotorTemperature());
+        SmartDashboard.putNumber("ID (TURN) "+absoluteEncoderID + " TEMP: ", turnMotor.getMotorTemperature());
+
         // SmartDashboard.putNumber("ID: " + absoluteEncoderID, Math.toDegrees(getTurningPosition()));
         // SmartDashboard.putNumber("GOAL: " + absoluteEncoderID, Math.toDegrees(state.angle.getRadians()));
         // SmartDashboard.putNumber("Set motor percent: " + absoluteEncoderID, turnPidController.calculate(getAbsoluteEncoderRad(), state.angle.getRadians()));
@@ -134,4 +135,6 @@ public class SwerveModule {
             driveEncoder.getPosition(),
             Rotation2d.fromRadians(getTurningPosition()));
       }
+
+    
 }

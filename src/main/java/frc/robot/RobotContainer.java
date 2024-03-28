@@ -117,7 +117,7 @@ public class RobotContainer {
         );
 
         NamedCommands.registerCommand("LowerArm", 
-          new LowerArm(arm, intake)
+          new LowerArm(arm, intake).withTimeout(1)
         );
 
         NamedCommands.registerCommand("ResetArm", 

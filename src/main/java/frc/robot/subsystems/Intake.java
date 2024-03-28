@@ -27,9 +27,9 @@ public class Intake extends SubsystemBase{
         rightWheel.setInverted(true);
         leftWheel.setInverted(true);
         
-        leftWheel.setSmartCurrentLimit(30);
-        rightWheel.setSmartCurrentLimit(30);
-        frontWheel.setSmartCurrentLimit(30);
+        // leftWheel.setSmartCurrentLimit(30);
+        // rightWheel.setSmartCurrentLimit(30);
+        // frontWheel.setSmartCurrentLimit(30);
     }
 
     /**

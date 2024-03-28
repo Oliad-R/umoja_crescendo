@@ -30,12 +30,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "LowerArm"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -88,13 +82,26 @@
         {
           "type": "named",
           "data": {
-            "name": "Aim"
+            "name": "Shoot"
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "SOURCE EXIT"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SOURCE EXIT"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "LowerArm"
+                }
+              }
+            ]
           }
         }
       ]
