@@ -55,8 +55,7 @@ public class AutoShoot extends Command{
     @Override
     public void execute(){
         SmartDashboard.putNumber("STATE AUTO", state);
-        double armPosition = arm.rightEncoder.getPosition();
-        SmartDashboard.putNumber("ARM ENCODER", armPosition);
+        double armPosition = arm.getEncoderPosition();
 
         odometerX = RobotContainer.swerveSubsystem.odometer.getPoseMeters().getX();
         // diff = Math.abs(Robot.initialOdometerPose-odometerX);
@@ -77,7 +76,7 @@ public class AutoShoot extends Command{
             if(Math.abs(armPosition-goal) > 0.6){
                 // arm.runArm(-0.5);
                 arm.runArm(armPID.calculate(armPos, goal));
-                armPos = arm.rightEncoder.getPosition();
+                armPos = arm.getEncoderPosition();
                 intake.runShooter(-0.7);
                 intake.runIntake(0);
             }
@@ -90,7 +89,7 @@ public class AutoShoot extends Command{
             currentTime = timer.getFPGATimestamp();
             if (currentTime-startTime < 1){
                 // arm.runArm(armPID.calculate(armPosition, ArmConstants.speakerEncoder));
-                armPos = arm.rightEncoder.getPosition();
+                armPos = arm.getEncoderPosition();
                 odometerX = RobotContainer.swerveSubsystem.odometer.getPoseMeters().getX();
                 diff = Math.abs(Robot.initialOdometerPose-odometerX);
                 arm.runArm(armPID.calculate(armPos, ArmConstants.speakerEncoder + DriveConstants.ArmEncoder2Meters*diff));

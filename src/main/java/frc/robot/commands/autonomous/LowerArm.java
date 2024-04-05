@@ -21,7 +21,7 @@ public class LowerArm extends Command{
         intake.runIntake(0.3);
         intake.runShooter(0);
 
-        armPosition = Arm.rightEncoder.getPosition();
+        armPosition = arm.getEncoderPosition();
 
         arm.runArm(0.3*Arm.armPID.calculate(armPosition, 0));
     }

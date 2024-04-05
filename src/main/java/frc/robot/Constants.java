@@ -121,6 +121,7 @@ public final class Constants {
         public static final double speakerEncoder = -30;
         public static final double farSpeakerEncoder = -45; // 50->45, might need to adjust TO-DO
         public static final double ampEncoder = -135;
+        public static final double setupPosition = -120;
     }
 
 

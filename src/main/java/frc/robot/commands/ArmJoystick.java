@@ -68,15 +68,15 @@ public class ArmJoystick extends Command {
         SmartDashboard.putNumber("DIFF", diff);
         armInput = j.getRawAxis(OIConstants.LY)*0.4;
         if (j.getRawButton(OIConstants.B)) {
-            armPos = armSubsystem.rightEncoder.getPosition();
+            armPos = armSubsystem.getEncoderPosition();
             odometerX = RobotContainer.swerveSubsystem.odometer.getPoseMeters().getX();
             diff = useFlatAngle ? 0 : Math.abs(Robot.initialOdometerPose-odometerX);
             armSubsystem.runArm(armPID.calculate(armPos, ArmConstants.speakerEncoder + DriveConstants.ArmEncoder2Meters*diff));
         } else if (j.getRawButton(OIConstants.Y)) {
-            armPos = armSubsystem.rightEncoder.getPosition();
+            armPos = armSubsystem.getEncoderPosition();
             armSubsystem.runArm(armPID.calculate(armPos, ArmConstants.farSpeakerEncoder));
         } else if (j.getRawButton(OIConstants.A)) {
-            armPos = armSubsystem.rightEncoder.getPosition();
+            armPos = armSubsystem.getEncoderPosition();
             armSubsystem.runArm(armPID.calculate(armPos, ArmConstants.ampEncoder));
         } else {
             armSubsystem.runArm(armInput);
@@ -94,9 +94,8 @@ public class ArmJoystick extends Command {
 
         SmartDashboard.putBoolean("LIMITSWITCH ARM", armSubsystem.getArmLimitSwitch());
         SmartDashboard.putNumber("CLIMBER ENCODER", climberSubsystem.rightMotor.getEncoder().getPosition());
-        SmartDashboard.putNumber("ARM ENCODER", armSubsystem.rightEncoder.getPosition());
 
-        double armPos = armSubsystem.rightEncoder.getPosition();
+        // double armPos = armSubsystem.getEncoderPosition();
 
         // VisionLEDMode currentLedMode = RobotContainer.camera.getLEDMode();
         // VisionLEDMode ledMode = armPos < -141 || ( armPos < ArmConstants.speakerEncoder && armPos > -24.5) ? VisionLEDMode.kOn : VisionLEDMode.kOff;
