@@ -68,7 +68,7 @@ public class SwerveJoystick extends Command {
     // 2. Apply deadband
     // xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
     // ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
-    if (Math.abs(xSpeed) + Math.abs(ySpeed) > OIConstants.kDeadband) {
+    if (Math.abs(xSpeed) + Math.abs(ySpeed) < OIConstants.kDeadband) {
       xSpeed = 0.0;
       ySpeed = 0.0;
     }
@@ -85,21 +85,21 @@ public class SwerveJoystick extends Command {
       turningSpeed = turningLimiter.calculate(turningSpeed) * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
     }
 
-    if(j.getRawButton(OIConstants.B) || inAuto){
-      var result = RobotContainer.camera.getLatestResult();
-      RobotContainer.camera.setLED(VisionLEDMode.kOn);
-      SmartDashboard.putNumber("TURNING SPEED", turningSpeed);
+    // if(j.getRawButton(OIConstants.B) || inAuto){
+    //   // var result = RobotContainer.camera.getLatestResult();
+    //   // RobotContainer.camera.setLED(VisionLEDMode.kOn);
+    //   SmartDashboard.putNumber("TURNING SPEED", turningSpeed);
 
-      if(result.hasTargets()){
-        for (PhotonTrackedTarget target:result.targets){
-          System.out.println(target.getFiducialId());
-          if(target.getFiducialId()==4){
-            turningSpeed = turnPID.calculate(target.getYaw(), 0);
-            break;
-          }
-        }
-      }
-    }
+    //   // if(result.hasTargets()){
+    //   //   for (PhotonTrackedTarget target:result.targets){
+    //   //     System.out.println(target.getFiducialId());
+    //   //     if(target.getFiducialId()==4){
+    //   //       turningSpeed = turnPID.calculate(target.getYaw(), 0);
+    //   //       break;
+    //   //     }
+    //   //   }
+    //   // }
+    // }
 
     // 4. Construct desired chassis speeds
     ChassisSpeeds chassisSpeeds;

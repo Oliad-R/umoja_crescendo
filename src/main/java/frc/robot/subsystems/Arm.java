@@ -8,23 +8,25 @@ import com.revrobotics.CANSparkLowLevel;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase{
-    public static final CANSparkMax rightMotor = new CANSparkMax(ArmConstants.rightMotorID, CANSparkLowLevel.MotorType.kBrushless);
-    public static final CANSparkMax leftMotor = new CANSparkMax(ArmConstants.leftMotorID, CANSparkLowLevel.MotorType.kBrushless);
+    private CANSparkMax rightMotor = new CANSparkMax(ArmConstants.rightMotorID, CANSparkLowLevel.MotorType.kBrushless);
+    private CANSparkMax leftMotor = new CANSparkMax(ArmConstants.leftMotorID, CANSparkLowLevel.MotorType.kBrushless);
 
-    public static final RelativeEncoder rightEncoder = rightMotor.getEncoder(Type.kHallSensor, 42);
-    public static final RelativeEncoder leftEncoder = leftMotor.getEncoder(Type.kHallSensor, 42);
+    private RelativeEncoder rightEncoder = rightMotor.getEncoder(Type.kHallSensor, 42);
+    private RelativeEncoder leftEncoder = leftMotor.getEncoder(Type.kHallSensor, 42);
+
+    private boolean isArmReady = false;
 
     public static final DigitalInput armLimitSwitch = new DigitalInput(2);
 
     public static final PIDController armPID = new PIDController(ArmConstants.kP,0,0);
 
     public Arm(){
-        leftMotor.setIdleMode(IdleMode.kBrake);
-        rightMotor.setIdleMode(IdleMode.kBrake);
+        setIdleMode(IdleMode.kCoast);
 
         leftMotor.setSmartCurrentLimit(30);
         rightMotor.setSmartCurrentLimit(30);
@@ -52,6 +54,11 @@ public class Arm extends SubsystemBase{
         }
     }
 
+    public void setIdleMode(IdleMode mode){
+        leftMotor.setIdleMode(mode);
+        rightMotor.setIdleMode(mode);
+    }
+
     public void resetEncoders(){
         rightEncoder.setPosition(0);
         leftEncoder.setPosition(0);
@@ -59,5 +66,28 @@ public class Arm extends SubsystemBase{
 
     public boolean getArmLimitSwitch(){
         return armLimitSwitch.get();
+    }
+
+    /**
+     * Uses the right encoder.
+     * @return armPosition (double)
+     */
+    public double getArmPosition(){
+        return rightEncoder.getPosition();
+    }
+
+    @Override
+    public void periodic(){
+        SmartDashboard.putNumber("ARM ENCODER", getArmPosition());
+
+        if(getArmLimitSwitch()){
+            resetEncoders();
+        }
+
+        if(!isArmReady && getArmPosition() < ArmConstants.armStartingPos){
+            setIdleMode(IdleMode.kBrake);
+            isArmReady = true;
+        }
+
     }
 }

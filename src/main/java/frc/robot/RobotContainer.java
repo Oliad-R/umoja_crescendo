@@ -6,7 +6,7 @@ package frc.robot;
 
 import java.util.List;
 
-import org.photonvision.PhotonCamera;
+// import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -55,7 +55,6 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.USB;
 import frc.robot.commands.ArmJoystick;
-import frc.robot.commands.AutoShoot;
 import frc.robot.commands.SwerveJoystick;
 import frc.robot.commands.TeleCommandGroup;
 import frc.robot.commands.autonomous.AutoAim;
@@ -83,29 +82,12 @@ public class RobotContainer {
   public final static Climber climber = new Climber();
   public final static Joystick driverController = new Joystick(USB.DRIVER_CONTROLLER);
   public final static Joystick operatorController = new Joystick(USB.OPERATOR_CONTROLLER);
-  public final static PhotonCamera camera = new PhotonCamera("photonvision");
+  // public final static PhotonCamera camera = new PhotonCamera("photonvision");
 
   private final SendableChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    
-        NamedCommands.registerCommand("initShoot",
-          new AutoShoot(arm, intake).withTimeout(4)
-        );
-
-        NamedCommands.registerCommand("autoAim",
-          new AutoShoot(arm, intake, Constants.AutoShootState.AIM, Constants.AutoShootState.SHOOT).withTimeout(1.5)
-        );
-
-        NamedCommands.registerCommand("autoShoot",
-          new AutoShoot(arm, intake, Constants.AutoShootState.AIM).withTimeout(2)
-        );
-
-        NamedCommands.registerCommand("lowerArm",
-          new AutoShoot(arm, intake, 3).withTimeout(1.5)
-        );
-
         //NEW COMMANDS BROKEN UP
 
         NamedCommands.registerCommand("Aim", 

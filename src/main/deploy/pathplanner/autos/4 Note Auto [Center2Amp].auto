@@ -14,12 +14,6 @@
         {
           "type": "named",
           "data": {
-            "name": "ResetArm"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Aim"
           }
         },
@@ -161,15 +155,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "CENTER2SOURCE REVERSED"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Aim"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CENTER2SOURCE REVERSED"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Aim"
+                }
+              }
+            ]
           }
         },
         {

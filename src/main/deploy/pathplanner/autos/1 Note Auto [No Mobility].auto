@@ -14,12 +14,6 @@
         {
           "type": "named",
           "data": {
-            "name": "ResetArm"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Aim"
           }
         },

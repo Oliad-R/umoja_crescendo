@@ -14,12 +14,6 @@
         {
           "type": "named",
           "data": {
-            "name": "ResetArm"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Aim"
           }
         },
@@ -45,6 +39,31 @@
           "type": "path",
           "data": {
             "pathName": "AMP EXIT"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ReverseIntake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AMP2AMP"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Aim"
+                }
+              }
+            ]
           }
         }
       ]

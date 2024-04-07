@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.AutoShoot;
 import frc.robot.commands.SwerveJoystick;
 // import org.littletonrobotics.junction.LogFileUtil;
 // import org.littletonrobotics.junction.LoggedRobot;

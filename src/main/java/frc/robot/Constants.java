@@ -118,9 +118,10 @@ public final class Constants {
         public static final int rightMotorID = 44;
         public static final double kP =  0.1;
         public static final double kD =  0.01;
-        public static final double speakerEncoder = -30;
-        public static final double farSpeakerEncoder = -45; // 50->45, might need to adjust TO-DO
-        public static final double ampEncoder = -135;
+        public static final double speakerEncoder = -37; //-30;
+        public static final double farSpeakerEncoder = -52; // 50->45, might need to adjust TO-DO
+        public static final double ampEncoder = -150;
+        public static final double armStartingPos = -120; 
     }
 
 

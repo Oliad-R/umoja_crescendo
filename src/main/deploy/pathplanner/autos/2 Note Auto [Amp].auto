@@ -14,12 +14,6 @@
         {
           "type": "named",
           "data": {
-            "name": "ResetArm"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Aim"
           }
         },
@@ -27,12 +21,6 @@
           "type": "named",
           "data": {
             "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "LowerArm"
           }
         },
         {
@@ -55,21 +43,35 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "AMP2AMP REVERSE"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ReverseIntake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Aim"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AMP2AMP REVERSE"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ReverseIntake"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Aim"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
@@ -92,6 +94,63 @@
                 "type": "path",
                 "data": {
                   "pathName": "AMP EXIT"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AMP EXIT REVERSE"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ReverseIntake"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Aim"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AMP EXIT"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "LowerArm"
                 }
               }
             ]

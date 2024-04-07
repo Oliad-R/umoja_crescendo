@@ -7,6 +7,7 @@ import frc.robot.subsystems.Intake;
 public class ResetArm extends Command{
     Arm arm;
     Intake intake;
+    Double startPos, currentPos;
 
     public ResetArm(Arm arm, Intake intake){
         this.arm = arm;

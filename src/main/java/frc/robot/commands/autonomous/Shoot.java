@@ -20,7 +20,7 @@ public class Shoot extends Command{
 
     @Override
     public void execute(){
-        armPosition = Arm.rightEncoder.getPosition();
+        armPosition = arm.getArmPosition();
         // odometerX = RobotContainer.swerveSubsystem.odometer.getPoseMeters().getX();
         // diff = Math.abs(Robot.initialOdometerPose-odometerX);
         arm.runArm(Arm.armPID.calculate(armPosition, ArmConstants.speakerEncoder));

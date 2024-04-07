@@ -21,7 +21,7 @@ public class AutoAim extends Command{
     @Override
     public void execute(){
         //Get the current arm position
-        armPosition = Arm.rightEncoder.getPosition();
+        armPosition = arm.getArmPosition();
 
         //Run the arm based on this PID
         arm.runArm(Arm.armPID.calculate(armPosition, goal));
