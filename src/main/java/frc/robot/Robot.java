@@ -52,8 +52,7 @@ public class Robot extends TimedRobot{
   @Override
   public void disabledInit() {
     RobotContainer.gameState = GameConstants.Robot;
-    RobotContainer.led.setLEDColor(Colors.blue);
-    // RobotContainer.led.setUmojaColors();
+    RobotContainer.led.setUmojaColors();
   }
 
   @Override
@@ -63,6 +62,7 @@ public class Robot extends TimedRobot{
   @Override
   public void autonomousInit() {
     RobotContainer.gameState = GameConstants.Auto;
+    RobotContainer.led.setUmojaColors();
 
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 

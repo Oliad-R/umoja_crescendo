@@ -228,12 +228,10 @@ public final class Constants {
         public static final Color blue = Color.kBlue;
         public static final Color green = new Color(0, 255, 0);
         public static final Color white = Color.kWhite;
-        public static final Color uRed = new Color(135, 2 , 1);
-        public static final Color uOrange = new Color(254,170,11);
-        public static final Color uDarkOrange = new Color(229,38,14);
-        public static final Color uBlack = new Color(30, 24, 8);
-        public static final Color uGreen = new Color(18, 109, 2);
-        public static final Color uYellow = new Color(255, 255, 0);
-        public static final Color[] uColors = {red, uOrange, uGreen, uYellow, uDarkOrange, uBlack};
+        public static final Color uRed = new Color(20, 0 , 0);
+        public static final Color uDarkOrange = new Color(254,17,1);
+        public static final Color uGreen = new Color(0, 7, 0);
+        public static final Color uOrange = new Color(255, 25, 0);
+        public static final Color[] uColors = {uRed, uDarkOrange, uGreen, uOrange};
     }
 }
