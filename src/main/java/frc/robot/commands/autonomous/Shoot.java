@@ -21,9 +21,7 @@ public class Shoot extends Command{
     @Override
     public void execute(){
         armPosition = arm.getArmPosition();
-        // odometerX = RobotContainer.swerveSubsystem.odometer.getPoseMeters().getX();
-        // diff = Math.abs(Robot.initialOdometerPose-odometerX);
-        arm.runArm(Arm.armPID.calculate(armPosition, ArmConstants.speakerEncoder));
+        arm.runArm(arm.armPID.calculate(armPosition, ArmConstants.speakerEncoder));
         
         intake.runIntake(1);
         intake.runShooter(-1);

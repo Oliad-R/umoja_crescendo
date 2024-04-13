@@ -4,27 +4,11 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.NamedCommands;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.Colors;
 import frc.robot.Constants.GameConstants;
-import frc.robot.Constants.OIConstants;
-import frc.robot.commands.SwerveJoystick;
-// import org.littletonrobotics.junction.LogFileUtil;
-// import org.littletonrobotics.junction.LoggedRobot;
-// import org.littletonrobotics.junction.Logger;
-// import org.littletonrobotics.junction.networktables.NT4Publisher;
-// import org.littletonrobotics.junction.wpilog.WPILOGReader;
-// import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import frc.robot.commands.TeleCommandGroup;
 
 /**
@@ -45,30 +29,6 @@ public class Robot extends TimedRobot{
    */
   @Override
   public void robotInit() {
-    //TO-DO:
-    //BUTTONS TO ROTATE THE ROBOT 90 deg, 180 deg, 270deg, etc. 
-    //BUTTON TO ROTATE THE ROBOT 360 if we get defended.
-    // RobotContainer.climber.resetEncoders();
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-
-    // Logger.recordMetadata("ProjectName", "ACCNSwerveProject"); // Set a metadata value
-
-    // if (isReal()) {
-    //     Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
-    //     Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-    //     new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
-    // } else {
-    //     setUseTiming(false); // Run as fast as possible
-    //     String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-    //     Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-    //     Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
-    // }
-
-    // // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in the "Understanding Data Flow" page
-    // Logger.start();
-    
-    // Logger.start();
     m_robotContainer = new RobotContainer();
   }
   /**
@@ -85,7 +45,6 @@ public class Robot extends TimedRobot{
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    SmartDashboard.putBoolean("ARM DOWN", RobotContainer.arm.armLimitSwitch.get());
 
   }
 
@@ -93,33 +52,20 @@ public class Robot extends TimedRobot{
   @Override
   public void disabledInit() {
     RobotContainer.gameState = GameConstants.Robot;
-    RobotContainer.led.setBlue();
+    RobotContainer.led.setLEDColor(Colors.blue);
+    // RobotContainer.led.setUmojaColors();
   }
 
   @Override
   public void disabledPeriodic() {}
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
-
   @Override
-
   public void autonomousInit() {
     RobotContainer.gameState = GameConstants.Auto;
 
-
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    if(DriverStation.getAlliance().isPresent()){
-      Alliance alliance = DriverStation.getAlliance().get();
-      switch (alliance) {
-        case Blue:
-          initialOdometerPose = 1.37;
-          break;
-      
-        case Red:
-          initialOdometerPose = 15.2;
-      }
-    }
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -133,19 +79,26 @@ public class Robot extends TimedRobot{
   @Override
   public void teleopInit() {
     RobotContainer.gameState = GameConstants.TeleOp;
-    RobotContainer.led.setLEDColor(255, 0, 0);
+    if (RobotContainer.intake.hasNote) {
+      RobotContainer.led.setLEDColor(Colors.green);
+    } else {
+      RobotContainer.led.setLEDColor(Colors.red);
+    }
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    RobotContainer.swerveSubsystem.setDefaultCommand(new TeleCommandGroup(RobotContainer.swerveSubsystem,RobotContainer.arm,RobotContainer.intake,RobotContainer.climber,RobotContainer.driverController, RobotContainer.operatorController));
-    // RobotContainer.swerveSubsystem.setDefaultCommand(new SwerveJoystick(RobotContainer.swerveSubsystem,
-    //     () -> Math.pow(-RobotContainer.driverController.getRawAxis(OIConstants.kDriverYAxis), 3),
-    //     () -> Math.pow(-RobotContainer.driverController.getRawAxis(OIConstants.kDriverXAxis), 3),
-    //     () -> -RobotContainer.driverController.getRawAxis(OIConstants.kDriverRotAxis), false));
-
-
-
+    RobotContainer.swerveSubsystem.setDefaultCommand(
+      new TeleCommandGroup(
+        RobotContainer.swerveSubsystem,
+        RobotContainer.arm,
+        RobotContainer.intake,
+        RobotContainer.climber,
+        RobotContainer.driverController,
+        RobotContainer.operatorController
+      )
+    );
+    
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -153,9 +106,7 @@ public class Robot extends TimedRobot{
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-    
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {

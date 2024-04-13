@@ -24,7 +24,7 @@ public class AutoAim extends Command{
         armPosition = arm.getArmPosition();
 
         //Run the arm based on this PID
-        arm.runArm(Arm.armPID.calculate(armPosition, goal));
+        arm.runArm(arm.armPID.calculate(armPosition, goal));
         //Prepare the shooters
         intake.runShooter(-0.7);
         intake.runIntake(0);

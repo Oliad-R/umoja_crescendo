@@ -12,28 +12,29 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.Colors;
 import frc.robot.Constants.GameConstants;
 
 public class Arm extends SubsystemBase{
-    private CANSparkMax rightMotor = new CANSparkMax(ArmConstants.rightMotorID, CANSparkLowLevel.MotorType.kBrushless);
-    private CANSparkMax leftMotor = new CANSparkMax(ArmConstants.leftMotorID, CANSparkLowLevel.MotorType.kBrushless);
+    private final CANSparkMax rightMotor = new CANSparkMax(ArmConstants.rightMotorID, CANSparkLowLevel.MotorType.kBrushless);
+    private final CANSparkMax leftMotor = new CANSparkMax(ArmConstants.leftMotorID, CANSparkLowLevel.MotorType.kBrushless);
 
-    private RelativeEncoder rightEncoder = rightMotor.getEncoder(Type.kHallSensor, 42);
-    private RelativeEncoder leftEncoder = leftMotor.getEncoder(Type.kHallSensor, 42);
+    private final RelativeEncoder rightEncoder = rightMotor.getEncoder(Type.kHallSensor, 42);
+    private final RelativeEncoder leftEncoder = leftMotor.getEncoder(Type.kHallSensor, 42);
 
     private boolean isArmReady = false;
 
-    public static final DigitalInput armLimitSwitch = new DigitalInput(2);
+    private final DigitalInput armLimitSwitch = new DigitalInput(2);
 
-    public static final PIDController armPID = new PIDController(ArmConstants.kP,0,0);
+    public PIDController armPID = new PIDController(ArmConstants.kP,0,0);
 
     public Arm(){
+        //Default coast to raise arm manually
         setIdleMode(IdleMode.kCoast);
 
         leftMotor.setSmartCurrentLimit(30);
         rightMotor.setSmartCurrentLimit(30);
 
-        // rightMotor.follow(leftMotor, true);
         rightMotor.setInverted(true);
     }
 
@@ -45,7 +46,6 @@ public class Arm extends SubsystemBase{
             leftMotor.set(percent);
             rightMotor.set(percent);
         } else { //If the arm is down:
-            resetEncoders();
             if(percent<0){ //If they want to move the arm up, allow it.
                 leftMotor.set(percent);
                 rightMotor.set(percent);
@@ -81,16 +81,16 @@ public class Arm extends SubsystemBase{
     @Override
     public void periodic(){
         SmartDashboard.putNumber("ARM ENCODER", getArmPosition());
+        SmartDashboard.putBoolean("ARM DOWN", armLimitSwitch.get());
 
         if(getArmLimitSwitch()){
             resetEncoders();
         }
 
-
         if(RobotContainer.gameState==GameConstants.Robot){
             if(!isArmReady && getArmPosition() < ArmConstants.armStartingPos){
                 setIdleMode(IdleMode.kBrake);
-                RobotContainer.led.setLEDColor(0, 255, 0);
+                RobotContainer.led.setLEDColor(Colors.green);
                 isArmReady = true;
             }
         }

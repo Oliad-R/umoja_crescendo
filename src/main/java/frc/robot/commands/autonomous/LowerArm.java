@@ -18,12 +18,12 @@ public class LowerArm extends Command{
 
     @Override
     public void execute(){
-        intake.runIntake(1); //0.3;
+        intake.runIntake(0.6); //0.3;
         intake.runShooter(0);
 
         armPosition = arm.getArmPosition();
 
-        arm.runArm(0.3*Arm.armPID.calculate(armPosition, 0));
+        arm.runArm(0.3*arm.armPID.calculate(armPosition, 0));
     }
 
     @Override

@@ -9,7 +9,14 @@ import com.pathplanner.lib.util.ReplanningConfig;
 // import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.*;
+
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 // import edu.wpi.first.wpilibj.DriverStation;
@@ -27,6 +34,7 @@ import frc.robot.Constants;
 // import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.PoseEstimatorConstants;
 
 public class SwerveSubsystem extends SubsystemBase {
     private final SwerveModule frontLeft = new SwerveModule(
@@ -68,14 +76,24 @@ public class SwerveSubsystem extends SubsystemBase {
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
 
 
-    public final SwerveDriveOdometry odometer = new SwerveDriveOdometry(
+    // public final SwerveDriveOdometry odometer = new SwerveDriveOdometry(
+    //     DriveConstants.kDriveKinematics, new Rotation2d(),
+    //     new SwerveModulePosition[] {
+    //       frontLeft.getPosition(),
+    //       frontRight.getPosition(),
+    //       backLeft.getPosition(),
+    //       backRight.getPosition()
+    //     }, new Pose2d());
+    
+    public final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
         DriveConstants.kDriveKinematics, new Rotation2d(),
         new SwerveModulePosition[] {
           frontLeft.getPosition(),
           frontRight.getPosition(),
           backLeft.getPosition(),
           backRight.getPosition()
-        }, new Pose2d());
+        }, new Pose2d()
+    );
 
     public SwerveSubsystem() {
         new Thread(() -> {
@@ -151,12 +169,12 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-        return odometer.getPoseMeters();
+        return poseEstimator.getEstimatedPosition();
     }
 
     public void resetOdometry(Pose2d pose) {
         System.out.println("ODOMETRY RESET");
-        odometer.resetPosition(Rotation2d.fromDegrees(gyro.getYaw()), new SwerveModulePosition[] {
+        poseEstimator.resetPosition(Rotation2d.fromDegrees(gyro.getYaw()), new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
             backLeft.getPosition(),
@@ -175,15 +193,14 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("BL", Math.toDegrees(backLeft.getAbsoluteEncoderRad()));
         SmartDashboard.putNumber("BR", Math.toDegrees(backRight.getAbsoluteEncoderRad()));
 
-        SmartDashboard.putNumber("ODOMETRY METERS (X)", odometer.getPoseMeters().getX());
-
         SmartDashboard.putNumber("T FL", Math.toDegrees(frontLeft.getTurningPosition()%360));
         SmartDashboard.putNumber("T FR", Math.toDegrees(frontRight.getTurningPosition()%360));
         SmartDashboard.putNumber("T BL", Math.toDegrees(backLeft.getTurningPosition()%360));
         SmartDashboard.putNumber("T BR", Math.toDegrees(backRight.getTurningPosition()%360));
         SmartDashboard.putNumber("YAW", gyro.getYaw());
-        
-        odometer.update(Rotation2d.fromDegrees(-gyro.getYaw()),
+
+
+        poseEstimator.update(Rotation2d.fromDegrees(-gyro.getYaw()),
         // odometer.update(getRotation2d(),
             new SwerveModulePosition[] {
             frontLeft.getPosition(),
@@ -191,6 +208,15 @@ public class SwerveSubsystem extends SubsystemBase {
             backLeft.getPosition(),
             backRight.getPosition()
         });
+
+        var result = RobotContainer.camera.getLatestResult();
+
+        if(result.hasTargets()){
+            var imageCaptureTime = result.getTimestampSeconds();
+            var camToTargetTrans = result.getBestTarget().getBestCameraToTarget();
+            var camPose = PoseEstimatorConstants.kFarTargetPose.transformBy(camToTargetTrans.inverse());
+            poseEstimator.addVisionMeasurement(camPose.transformBy(PoseEstimatorConstants.kCameraToRobot).toPose2d(), imageCaptureTime);
+        }
     }
 
     public void stopModules() {

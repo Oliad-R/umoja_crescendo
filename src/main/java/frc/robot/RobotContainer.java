@@ -6,7 +6,7 @@ package frc.robot;
 
 import java.util.List;
 
-// import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -86,7 +86,7 @@ public class RobotContainer {
   public final static Joystick operatorController = new Joystick(USB.OPERATOR_CONTROLLER);
   public final static LEDs led = new LEDs();
   public static int gameState = GameConstants.Robot; 
-  // public final static PhotonCamera camera = new PhotonCamera("photonvision");
+  public static PhotonCamera camera = new PhotonCamera("photonvision");
 
   private final SendableChooser<Command> autoChooser;
 

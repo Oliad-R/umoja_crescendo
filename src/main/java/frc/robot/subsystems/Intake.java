@@ -6,8 +6,10 @@ import com.revrobotics.CANSparkLowLevel;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.Colors;
 import frc.robot.Constants.GameConstants;
 import frc.robot.Constants.IntakeConstants;
 
@@ -20,7 +22,7 @@ public class Intake extends SubsystemBase{
 
     public boolean hasNote = false;
     public boolean intakeState;
-    public int red, green, blue = 0;
+    private Color intakeColor;
 
     /**
      * Runs during RobotInit(). Define idlemodes, current limits, etc.
@@ -69,22 +71,20 @@ public class Intake extends SubsystemBase{
     public void periodic() {
         super.periodic();
 
+        SmartDashboard.putBoolean("INTAKE SWITCH", intakeState);
+
         if(RobotContainer.gameState==GameConstants.TeleOp){
             intakeState = getIntakeSwitch();
-
-            SmartDashboard.putBoolean("INTAKE SWITCH", intakeState);
 
             if(hasNote!=intakeState){
 
                 if(intakeState){
-                    red = 0;
-                    green = 255;
+                    intakeColor = Colors.green;
                 } else {
-                    red = 255;
-                    green = 0;
+                    intakeColor = Colors.red;
                 }
                 
-                RobotContainer.led.setLEDColor(red, green, blue);
+                RobotContainer.led.setLEDColor(intakeColor);
                 hasNote = !hasNote;
             }
         }

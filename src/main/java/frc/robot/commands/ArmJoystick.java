@@ -65,13 +65,10 @@ public class ArmJoystick extends Command {
         }
 
         //Running the arm
-        SmartDashboard.putNumber("DIFF", diff);
         armInput = j.getRawAxis(OIConstants.LY)*0.4;
         if (j.getRawButton(OIConstants.B)) {
             armPos = armSubsystem.getArmPosition();
-            odometerX = RobotContainer.swerveSubsystem.odometer.getPoseMeters().getX();
-            diff = useFlatAngle ? 0 : Math.abs(Robot.initialOdometerPose-odometerX);
-            armSubsystem.runArm(armPID.calculate(armPos, ArmConstants.speakerEncoder + DriveConstants.ArmEncoder2Meters*diff));
+            armSubsystem.runArm(armPID.calculate(armPos, ArmConstants.speakerEncoder));
         } else if (j.getRawButton(OIConstants.Y)) {
             armPos = armSubsystem.getArmPosition();
             armSubsystem.runArm(armPID.calculate(armPos, ArmConstants.farSpeakerEncoder));
@@ -91,9 +88,6 @@ public class ArmJoystick extends Command {
         if(j.getRawButton(OIConstants.X)){
             intakeSubsystem.runIntake(-0.25);
         }
-
-        SmartDashboard.putBoolean("LIMITSWITCH ARM", armSubsystem.getArmLimitSwitch());
-        SmartDashboard.putNumber("CLIMBER ENCODER", climberSubsystem.rightMotor.getEncoder().getPosition());
 
         // double armPos = armSubsystem.getArmPosition();
 

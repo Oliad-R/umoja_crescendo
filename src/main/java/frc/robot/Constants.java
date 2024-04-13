@@ -4,10 +4,15 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -17,7 +22,7 @@ import edu.wpi.first.math.util.Units;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {
+public final class Constants {   
 
     public final class USB{
         public static final int DRIVER_CONTROLLER = 0;      // Driver Controller USB ID
@@ -42,9 +47,6 @@ public final class Constants {
     }
 
     public static final class DriveConstants {
-
-        public static final double ArmEncoder2Meters = -20.5; // (51-35)/(3.536066-4.481552); // change in odometer x / change in arm encoder 
-
         public static final double kTrackWidth = Units.inchesToMeters(23.5);
         // Distance between right and left wheels
         public static final double kWheelBase = Units.inchesToMeters(22);
@@ -115,6 +117,7 @@ public final class Constants {
 
     public static final class LEDConstants {
         public static final int numLEDsPerStrip = 36;
+        public static final int numLEDsPerColor = 3;
     }
 
     public static final class GameConstants {
@@ -134,6 +137,35 @@ public final class Constants {
         public static final double armStartingPos = -120; 
     }
 
+    public static final class PoseEstimatorConstants {
+        // See
+        // https://firstfrc.blob.core.windows.net/frc2020/PlayingField/2020FieldDrawing-SeasonSpecific.pdf
+        // page 208
+        public static final double targetWidth = Units.inchesToMeters(41.30) - Units.inchesToMeters(6.70); // meters
+
+        // See
+        // https://firstfrc.blob.core.windows.net/frc2020/PlayingField/2020FieldDrawing-SeasonSpecific.pdf
+        // page 197
+        public static final double targetHeight = Units.inchesToMeters(98.19) - Units.inchesToMeters(81.19); // meters
+
+        // See https://firstfrc.blob.core.windows.net/frc2020/PlayingField/LayoutandMarkingDiagram.pdf
+        // pages 4 and 5
+        public static final double kFarTgtXPos = Units.feetToMeters(54);
+        public static final double kFarTgtYPos = Units.feetToMeters(27 / 2) - Units.inchesToMeters(43.75) - Units.inchesToMeters(48.0 / 2.0);
+        public static final double kFarTgtZPos = (Units.inchesToMeters(98.19) - targetHeight) / 2 + targetHeight;
+
+        public static final Pose3d kFarTargetPose =
+            new Pose3d(
+                new Translation3d(kFarTgtXPos, kFarTgtYPos, kFarTgtZPos),
+                new Rotation3d(0.0, 0.0, Units.degreesToRadians(180))
+        );
+
+        public static final Transform3d kCameraToRobot = 
+            new Transform3d(
+                new Translation3d(-0.33,-0.17,0.36), 
+                new Rotation3d(0,45,180)
+        );
+    }
 
     public static final class ClimbConstants {
         public static final int leftMotorID = 50;
@@ -150,10 +182,10 @@ public final class Constants {
         public static final double kPYController = 1.5;
         public static final double kPThetaController = 3;
 
-        public static final TrapezoidProfile.Constraints kThetaControllerConstraints = //
-                new TrapezoidProfile.Constraints(
-                        kMaxAngularSpeedRadiansPerSecond,
-                        kMaxAngularAccelerationRadiansPerSecondSquared);
+        public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
+            new TrapezoidProfile.Constraints(
+                kMaxAngularSpeedRadiansPerSecond,
+                kMaxAngularAccelerationRadiansPerSecondSquared);
     }
 
     public static final class OIConstants {
@@ -191,10 +223,17 @@ public final class Constants {
         public static final int RY = 5;
     }
 
-    public final class AutoShootState {
-        public static final int RESET_ARM = 0;
-        public static final int AIM = 1;
-        public static final int SHOOT = 2;
-        public static final int LOWER_AND_INTAKE = 3;
+    public static final class Colors {
+        public static final Color red = Color.kRed;
+        public static final Color blue = Color.kBlue;
+        public static final Color green = new Color(0, 255, 0);
+        public static final Color white = Color.kWhite;
+        public static final Color uRed = new Color(135, 2 , 1);
+        public static final Color uOrange = new Color(254,170,11);
+        public static final Color uDarkOrange = new Color(229,38,14);
+        public static final Color uBlack = new Color(30, 24, 8);
+        public static final Color uGreen = new Color(18, 109, 2);
+        public static final Color uYellow = new Color(255, 255, 0);
+        public static final Color[] uColors = {red, uOrange, uGreen, uYellow, uDarkOrange, uBlack};
     }
 }

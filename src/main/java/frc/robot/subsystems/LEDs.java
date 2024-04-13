@@ -2,38 +2,57 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
-import frc.robot.Constants.GameConstants;
+import frc.robot.Constants.Colors;
 import frc.robot.Constants.LEDConstants;
 
 public class LEDs extends SubsystemBase {
     private AddressableLED LED = new AddressableLED(1);
     private AddressableLEDBuffer LEDBuffer = new AddressableLEDBuffer(4*LEDConstants.numLEDsPerStrip);
 
+    private Color currColor;
+    private int index = 0;
+
     public LEDs(){
         LED.setLength(LEDBuffer.getLength());
-        setLEDColor(255, 0, 0);
+        setLEDColor(Colors.red);
         LED.start();
     }
 
-    public void setLEDColor(int red, int green, int blue){
+    public void setLEDColor(Color color){
         for (int i = 0; i < LEDBuffer.getLength(); i++) {
-            LEDBuffer.setRGB(i, red, green, blue);
+            LEDBuffer.setRGB(i, (int)color.red*255, (int)color.green*255, (int)color.blue*255);
         }
         LED.setData(LEDBuffer);
     }
 
-    public void setRed(){
-        setLEDColor(255, 0, 0);
+    public void setUmojaColors(){
+        for (int i = 0; i < LEDBuffer.getLength(); i++) {
+            currColor = Colors.uColors[index];
+            if(i%3==0){
+                index++;
+                if(index>=Colors.uColors.length){
+                    index = 0;
+                }
+            }
+            LEDBuffer.setRGB(i, (int)currColor.red*255, (int)currColor.green*255, (int)currColor.blue*255);
+        }
+        LED.setData(LEDBuffer);
     }
 
-    public void setGreen(){
-        setLEDColor(0,255,0);
-    }
-
-    public void setBlue(){
-        setLEDColor(0, 0, 255);
-    }
-
+    // public void rotateColors() {
+        
+    //     for (int i = 0; i < LEDBuffer.getLength(); i++) {
+    //         currColor = Colors.uColors[index];
+    //         if(i%3==0){
+    //             index++;
+    //             if(index>=Colors.uColors.length){
+    //                 index = 0;
+    //             }
+    //         }
+    //         LEDBuffer.setRGB(i, (int)currColor.red*255, (int)currColor.green*255, (int)currColor.blue*255);
+    //     }
+    //     LED.setData(LEDBuffer);
+    // }
 }
