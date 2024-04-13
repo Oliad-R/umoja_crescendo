@@ -50,6 +50,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.GameConstants;
 // import frc.robot.Constants.AutoConstants;
 // import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -65,6 +66,7 @@ import frc.robot.commands.autonomous.Shoot;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.SwerveSubsystem;
 
 
@@ -82,6 +84,8 @@ public class RobotContainer {
   public final static Climber climber = new Climber();
   public final static Joystick driverController = new Joystick(USB.DRIVER_CONTROLLER);
   public final static Joystick operatorController = new Joystick(USB.OPERATOR_CONTROLLER);
+  public final static LEDs led = new LEDs();
+  public static int gameState = GameConstants.Robot; 
   // public final static PhotonCamera camera = new PhotonCamera("photonvision");
 
   private final SendableChooser<Command> autoChooser;

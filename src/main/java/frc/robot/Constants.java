@@ -113,6 +113,16 @@ public final class Constants {
         public static final int rightWheelID = 40;
     }
 
+    public static final class LEDConstants {
+        public static final int numLEDsPerStrip = 36;
+    }
+
+    public static final class GameConstants {
+        public static final int Robot = 0;
+        public static final int Auto = 1;
+        public static final int TeleOp = 2;
+    }
+
     public static final class ArmConstants {
         public static final int leftMotorID = 43;
         public static final int rightMotorID = 44;

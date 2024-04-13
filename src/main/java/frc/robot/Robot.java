@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.GameConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.SwerveJoystick;
 // import org.littletonrobotics.junction.LogFileUtil;
@@ -84,14 +85,16 @@ public class Robot extends TimedRobot{
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    SmartDashboard.putBoolean("HAS NOTE", RobotContainer.intake.intakeLimitSwitch.get());
     SmartDashboard.putBoolean("ARM DOWN", RobotContainer.arm.armLimitSwitch.get());
 
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    RobotContainer.gameState = GameConstants.Robot;
+    RobotContainer.led.setBlue();
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -101,6 +104,9 @@ public class Robot extends TimedRobot{
   @Override
 
   public void autonomousInit() {
+    RobotContainer.gameState = GameConstants.Auto;
+
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if(DriverStation.getAlliance().isPresent()){
@@ -126,15 +132,19 @@ public class Robot extends TimedRobot{
 
   @Override
   public void teleopInit() {
+    RobotContainer.gameState = GameConstants.TeleOp;
+    RobotContainer.led.setLEDColor(255, 0, 0);
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
-    // this line or comment it out.s
+    // this line or comment it out.
     RobotContainer.swerveSubsystem.setDefaultCommand(new TeleCommandGroup(RobotContainer.swerveSubsystem,RobotContainer.arm,RobotContainer.intake,RobotContainer.climber,RobotContainer.driverController, RobotContainer.operatorController));
     // RobotContainer.swerveSubsystem.setDefaultCommand(new SwerveJoystick(RobotContainer.swerveSubsystem,
     //     () -> Math.pow(-RobotContainer.driverController.getRawAxis(OIConstants.kDriverYAxis), 3),
     //     () -> Math.pow(-RobotContainer.driverController.getRawAxis(OIConstants.kDriverXAxis), 3),
     //     () -> -RobotContainer.driverController.getRawAxis(OIConstants.kDriverRotAxis), false));
+
+
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();

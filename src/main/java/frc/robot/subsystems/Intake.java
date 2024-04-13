@@ -5,8 +5,10 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.RobotContainer;
+import frc.robot.Constants.GameConstants;
 import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase{
@@ -14,7 +16,11 @@ public class Intake extends SubsystemBase{
     public static final CANSparkMax rightWheel = new CANSparkMax(IntakeConstants.rightWheelID, CANSparkLowLevel.MotorType.kBrushless);
     public static final CANSparkMax frontWheel = new CANSparkMax(IntakeConstants.frontWheelID, CANSparkLowLevel.MotorType.kBrushless);
 
-    public static final DigitalInput intakeLimitSwitch = new DigitalInput(0);
+    public static final DigitalInput intakeSensor = new DigitalInput(9);
+
+    public boolean hasNote = false;
+    public boolean intakeState;
+    public int red, green, blue = 0;
 
     /**
      * Runs during RobotInit(). Define idlemodes, current limits, etc.
@@ -55,7 +61,32 @@ public class Intake extends SubsystemBase{
         runShooter(0);
     }
 
-    // public boolean getIntakeLimitSwitch(){
-    //     return intakeLimitSwitch.get();
-    // }
+    public boolean getIntakeSwitch(){
+        return !intakeSensor.get();
+    }
+
+    @Override
+    public void periodic() {
+        super.periodic();
+
+        if(RobotContainer.gameState==GameConstants.TeleOp){
+            intakeState = getIntakeSwitch();
+
+            SmartDashboard.putBoolean("INTAKE SWITCH", intakeState);
+
+            if(hasNote!=intakeState){
+
+                if(intakeState){
+                    red = 0;
+                    green = 255;
+                } else {
+                    red = 255;
+                    green = 0;
+                }
+                
+                RobotContainer.led.setLEDColor(red, green, blue);
+                hasNote = !hasNote;
+            }
+        }
+    }
 }

@@ -18,7 +18,7 @@ public class LowerArm extends Command{
 
     @Override
     public void execute(){
-        intake.runIntake(0.3);
+        intake.runIntake(1); //0.3;
         intake.runShooter(0);
 
         armPosition = arm.getArmPosition();

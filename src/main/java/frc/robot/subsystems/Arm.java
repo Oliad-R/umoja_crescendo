@@ -10,7 +10,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.GameConstants;
 
 public class Arm extends SubsystemBase{
     private CANSparkMax rightMotor = new CANSparkMax(ArmConstants.rightMotorID, CANSparkLowLevel.MotorType.kBrushless);
@@ -84,10 +86,13 @@ public class Arm extends SubsystemBase{
             resetEncoders();
         }
 
-        if(!isArmReady && getArmPosition() < ArmConstants.armStartingPos){
-            setIdleMode(IdleMode.kBrake);
-            isArmReady = true;
-        }
 
+        if(RobotContainer.gameState==GameConstants.Robot){
+            if(!isArmReady && getArmPosition() < ArmConstants.armStartingPos){
+                setIdleMode(IdleMode.kBrake);
+                RobotContainer.led.setLEDColor(0, 255, 0);
+                isArmReady = true;
+            }
+        }
     }
 }
