@@ -24,12 +24,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "LowerArm"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -42,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "CENTER2AMP"
+                  "pathName": "CENTER2AMP [New]"
                 }
               }
             ]
@@ -61,7 +55,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "CENTER2AMP REVERSED"
+                  "pathName": "CENTER2AMP [New] REVERSED"
                 }
               },
               {

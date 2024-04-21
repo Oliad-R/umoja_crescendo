@@ -92,7 +92,57 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Path_5"
+                  "pathName": "CENTER2C3"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ReverseIntake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CENTER2C3 REVERSED"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Aim"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "LowerArm"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CENTER2C3"
                 }
               }
             ]

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.37,
-      "y": 5.56
+      "x": 0.67,
+      "y": 4.38
     },
-    "rotation": 0
+    "rotation": -58.06
   },
   "command": {
     "type": "sequential",
@@ -24,12 +24,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "LowerArm"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -42,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "CENTER2SOURCE"
+                  "pathName": "SOURCE EXIT"
                 }
               }
             ]
@@ -61,7 +55,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "CENTER2SOURCE REVERSED"
+                  "pathName": "SOURCE EXIT REVERSE [Wide]"
                 }
               },
               {
@@ -92,78 +86,10 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Path_5"
+                  "pathName": "SOURCE EXIT"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ReverseIntake"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Path_5_REVERSED"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Aim"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "LowerArm"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "CENTER2AMP [New]"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "CENTER2AMP [New] REVERSED"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Aim"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
           }
         }
       ]

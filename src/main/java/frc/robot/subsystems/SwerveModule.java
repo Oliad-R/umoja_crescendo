@@ -14,7 +14,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
@@ -58,11 +57,7 @@ public class SwerveModule {
 
         turnPIDController = new PIDController(ModuleConstants.kPTurning, 0, 0);
         turnPIDController.enableContinuousInput(-Math.PI, Math.PI);
-
-
-        // drivePIDcontroller = new PIDController(ModuleConstants.kPDriving, 0, 0);
-
-        // Timer.delay(2);
+        
         resetEncoders();
     }
 
@@ -136,6 +131,4 @@ public class SwerveModule {
             driveEncoder.getPosition(),
             Rotation2d.fromRadians(getTurningPosition()));
       }
-
-    
 }

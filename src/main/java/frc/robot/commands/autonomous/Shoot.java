@@ -19,22 +19,21 @@ public class Shoot extends Command{
     }
 
     @Override
+    public void initialize(){
+        intake.isShooting = true;
+        intake.runIntake(1);
+        intake.runShooter(-1);
+    }
+
+    @Override
     public void execute(){
         armPosition = arm.getArmPosition();
         arm.runArm(arm.armPID.calculate(armPosition, ArmConstants.speakerEncoder));
-        
-        intake.runIntake(1);
-        intake.runShooter(-1);
-        // } else {
-        //     arm.runArm(0);
-        //     intake.stop();
-
-        //     end(false);
-        // }
     }
 
     @Override
     public void end(boolean isInterrupted){
+        intake.isShooting = false;
         arm.runArm(0);
         intake.stop();
     }

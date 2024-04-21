@@ -86,7 +86,26 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SOURCE EXIT"
+                  "pathName": "C4 EXIT"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "C4 EXIT REVERSE"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Aim"
                 }
               }
             ]

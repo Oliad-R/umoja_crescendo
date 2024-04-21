@@ -19,19 +19,21 @@ public class AutoAim extends Command{
     }
 
     @Override
-    public void execute(){
-        //Get the current arm position
-        armPosition = arm.getArmPosition();
-
-        //Run the arm based on this PID
-        arm.runArm(arm.armPID.calculate(armPosition, goal));
-        //Prepare the shooters
+    public void initialize() {
+        intake.isShooting = true;
         intake.runShooter(-0.7);
         intake.runIntake(0);
     }
 
     @Override
+    public void execute(){
+        armPosition = arm.getArmPosition();
+        arm.runArm(arm.armPID.calculate(armPosition, goal));
+    }
+
+    @Override
     public boolean isFinished(){
+        intake.isShooting = false;
         return !(Math.abs(armPosition-goal) > 0.6);
     }
 

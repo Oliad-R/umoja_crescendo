@@ -1,39 +1,32 @@
 package frc.robot.subsystems;
 
-// import org.littletonrobotics.junction.Logger;
-
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-// import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
-import org.photonvision.targeting.*;
-
-import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-// import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-// import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-// import edu.wpi.first.util.WPIUtilJNI;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
-// import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.GameConstants;
 import frc.robot.Constants.PoseEstimatorConstants;
 
 public class SwerveSubsystem extends SubsystemBase {
@@ -75,6 +68,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
 
+    private AprilTagFieldLayout fieldAprilTags= AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
     // public final SwerveDriveOdometry odometer = new SwerveDriveOdometry(
     //     DriveConstants.kDriveKinematics, new Rotation2d(),
@@ -199,23 +193,34 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("T BR", Math.toDegrees(backRight.getTurningPosition()%360));
         SmartDashboard.putNumber("YAW", gyro.getYaw());
 
+        if(RobotContainer.gameState!=GameConstants.TeleOp){
+            poseEstimator.update(Rotation2d.fromDegrees(-gyro.getYaw()),
+            // odometer.update(getRotation2d(),
+                new SwerveModulePosition[] {
+                frontLeft.getPosition(),
+                frontRight.getPosition(),
+                backLeft.getPosition(),
+                backRight.getPosition()
+            });
 
-        poseEstimator.update(Rotation2d.fromDegrees(-gyro.getYaw()),
-        // odometer.update(getRotation2d(),
-            new SwerveModulePosition[] {
-            frontLeft.getPosition(),
-            frontRight.getPosition(),
-            backLeft.getPosition(),
-            backRight.getPosition()
-        });
-
-        var result = RobotContainer.camera.getLatestResult();
-
-        if(result.hasTargets()){
-            var imageCaptureTime = result.getTimestampSeconds();
-            var camToTargetTrans = result.getBestTarget().getBestCameraToTarget();
-            var camPose = PoseEstimatorConstants.kFarTargetPose.transformBy(camToTargetTrans.inverse());
-            poseEstimator.addVisionMeasurement(camPose.transformBy(PoseEstimatorConstants.kCameraToRobot).toPose2d(), imageCaptureTime);
+            // var result = RobotContainer.camera.getLatestResult();
+            // boolean hasTargets = result.hasTargets();
+            // SmartDashboard.putBoolean("Has Targets", hasTargets);
+            // if(hasTargets){
+            //     var imageCaptureTime = result.getTimestampSeconds();
+            //     var camToTargetTrans = result.getBestTarget().getBestCameraToTarget();
+            //     int id = result.getBestTarget().getFiducialId();
+            //     var tagFromId = fieldAprilTags.getTagPose(id);
+            //     if (tagFromId != null) {
+            //         Pose3d tag = tagFromId.get();
+            //         Pose3d poseTarget = new Pose3d(tag.getTranslation(), tag.getRotation());
+            //         SmartDashboard.putNumber("X", tag.getX());
+            //         SmartDashboard.putNumber("Y", tag.getY());
+            //         SmartDashboard.putNumber("Z", tag.getZ());
+            //         var camPose = poseTarget.transformBy(camToTargetTrans.inverse());
+            //         poseEstimator.addVisionMeasurement(camPose.transformBy(PoseEstimatorConstants.kCameraToRobot).toPose2d(), imageCaptureTime);
+            //     }
+            // }
         }
     }
 
@@ -228,10 +233,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public void setModuleStates(SwerveModuleState[] desiredStates){
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        // frontLeft.setDesiredState(desiredStates[0]);
-        // frontRight.setDesiredState(desiredStates[1]);
-        // backLeft.setDesiredState(desiredStates[2]);
-        // backRight.setDesiredState(desiredStates[3]);
         frontRight.setDesiredState(desiredStates[0]);
         frontLeft.setDesiredState(desiredStates[1]);
         backRight.setDesiredState(desiredStates[2]);
@@ -241,6 +242,5 @@ public class SwerveSubsystem extends SubsystemBase {
     public void setModuleStatesFromSpeeds(ChassisSpeeds speeds){
         SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
         setModuleStates(moduleStates);
-        // Logger.recordOutput("ModuleSTATES", moduleStates);
     }
 }

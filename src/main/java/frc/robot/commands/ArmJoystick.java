@@ -1,23 +1,14 @@
 package frc.robot.commands;
 
-import java.util.function.Supplier;
-
-import org.photonvision.common.hardware.VisionLEDMode;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.USB;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.SwerveSubsystem;
 
 public class ArmJoystick extends Command {
     //Defining subsystems
@@ -26,9 +17,9 @@ public class ArmJoystick extends Command {
     Climber climberSubsystem;
 
     Joystick j = new Joystick(USB.OPERATOR_CONTROLLER);
-    double armInput, armPos, error, diff, odometerX;
+    double armInput, armPos, error;
     PIDController armPID = new PIDController(ArmConstants.kP, 0, ArmConstants.kD);
-    boolean useFlatAngle = true;
+    boolean useFlatAngle, defaultArmDown = true;
 
     public ArmJoystick(Arm armSubsystem, Intake intakeSubsystem, Climber climberSubsystem, Joystick j){
         this.armSubsystem = armSubsystem;
@@ -66,6 +57,7 @@ public class ArmJoystick extends Command {
 
         //Running the arm
         armInput = j.getRawAxis(OIConstants.LY)*0.4;
+
         if (j.getRawButton(OIConstants.B)) {
             armPos = armSubsystem.getArmPosition();
             armSubsystem.runArm(armPID.calculate(armPos, ArmConstants.speakerEncoder));
@@ -76,13 +68,19 @@ public class ArmJoystick extends Command {
             armPos = armSubsystem.getArmPosition();
             armSubsystem.runArm(armPID.calculate(armPos, ArmConstants.ampEncoder));
         } else {
-            armSubsystem.runArm(armInput);
+            if (defaultArmDown) {
+                armPos = armSubsystem.getArmPosition();
+                armSubsystem.runArm(0.5*armPID.calculate(armPos, ArmConstants.armHover));
+            } else {
+                armSubsystem.runArm(armInput);
+            }
         }
 
-        if (j.getRawButtonPressed(OIConstants.START)) {
-            useFlatAngle = !useFlatAngle;
+        if(j.getRawButtonPressed(OIConstants.START)){
+            defaultArmDown = !defaultArmDown;
         }
-        
+
+
 
         //Reverse the intake
         if(j.getRawButton(OIConstants.X)){

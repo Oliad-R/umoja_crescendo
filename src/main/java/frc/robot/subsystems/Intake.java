@@ -20,7 +20,7 @@ public class Intake extends SubsystemBase{
 
     public static final DigitalInput intakeSensor = new DigitalInput(9);
 
-    public boolean hasNote = false;
+    public boolean hasNote, isShooting = false;
     public boolean intakeState;
     private Color intakeColor;
 
@@ -34,10 +34,6 @@ public class Intake extends SubsystemBase{
 
         rightWheel.setInverted(true);
         leftWheel.setInverted(true);
-        
-        // leftWheel.setSmartCurrentLimit(30);
-        // rightWheel.setSmartCurrentLimit(30);
-        // frontWheel.setSmartCurrentLimit(30);
     }
 
     /**
@@ -69,24 +65,21 @@ public class Intake extends SubsystemBase{
 
     @Override
     public void periodic() {
-        super.periodic();
-
         SmartDashboard.putBoolean("INTAKE SWITCH", intakeState);
 
-        if(RobotContainer.gameState==GameConstants.TeleOp){
-            intakeState = getIntakeSwitch();
+        intakeState = getIntakeSwitch();
 
-            if(hasNote!=intakeState){
-
+        if(hasNote!=intakeState){
+            if(RobotContainer.gameState==GameConstants.TeleOp){
                 if(intakeState){
                     intakeColor = Colors.green;
                 } else {
-                    intakeColor = Colors.red;
-                }
-                
+                    intakeColor = Colors.white;
+                }                
                 RobotContainer.led.setLEDColor(intakeColor);
-                hasNote = !hasNote;
             }
+            
+            hasNote = !hasNote;
         }
     }
 }

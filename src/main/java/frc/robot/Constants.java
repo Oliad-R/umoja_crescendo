@@ -131,10 +131,11 @@ public final class Constants {
         public static final int rightMotorID = 44;
         public static final double kP =  0.1;
         public static final double kD =  0.01;
-        public static final double speakerEncoder = -37; //-30;
+        public static final double speakerEncoder = -34; //-30;
         public static final double farSpeakerEncoder = -52; // 50->45, might need to adjust TO-DO
         public static final double ampEncoder = -150;
         public static final double armStartingPos = -120; 
+        public static final double armHover = -2;
     }
 
     public static final class PoseEstimatorConstants {
@@ -163,7 +164,7 @@ public final class Constants {
         public static final Transform3d kCameraToRobot = 
             new Transform3d(
                 new Translation3d(-0.33,-0.17,0.36), 
-                new Rotation3d(0,45,180)
+                new Rotation3d(0,-45,180)
         );
     }
 

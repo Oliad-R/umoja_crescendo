@@ -24,62 +24,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "LowerArm"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "LowerArm"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "CENTER2SOURCE"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ReverseIntake"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "CENTER2SOURCE REVERSED"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Aim"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -149,15 +93,78 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "CENTER2AMP [New] REVERSED"
+            "name": "ReverseIntake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CENTER2AMP [New] REVERSED"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Aim"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Aim"
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "LowerArm"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CENTER2SOURCE"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ReverseIntake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CENTER2SOURCE REVERSED"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Aim"
+                }
+              }
+            ]
           }
         },
         {
